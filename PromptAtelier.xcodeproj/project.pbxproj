@@ -1,0 +1,1045 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10101 /* PromptAtelierApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20101 /* PromptAtelierApp.swift */; };
+		A10102 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20102 /* AppContainer.swift */; };
+		A10103 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20103 /* AppRouter.swift */; };
+		A10104 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20201 /* LibraryView.swift */; };
+		A10105 /* PromptRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20202 /* PromptRowView.swift */; };
+		A10106 /* LibraryFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20203 /* LibraryFilterBar.swift */; };
+		A10107 /* PromptDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20301 /* PromptDetailView.swift */; };
+		A10108 /* CopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20302 /* CopyButton.swift */; };
+		A10109 /* FolderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20401 /* FolderListView.swift */; };
+		A1010A /* TagManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20402 /* TagManagementView.swift */; };
+		A1010B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20501 /* SettingsView.swift */; };
+		A1010C /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20502 /* SyncStatusView.swift */; };
+		A1010D /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20701 /* PersistenceController.swift */; };
+		A1010E /* PromptRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20703 /* PromptRepository.swift */; };
+		A1010F /* PromptRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20801 /* PromptRecord+Extensions.swift */; };
+		A10110 /* CaptureNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20901 /* CaptureNormalizer.swift */; };
+		A10111 /* CategorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20902 /* CategorizationService.swift */; };
+		A10112 /* SourceInferenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20903 /* SourceInferenceService.swift */; };
+		A10113 /* DeepLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20904 /* DeepLinkHandler.swift */; };
+		A10114 /* AppGroupPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A01 /* AppGroupPaths.swift */; };
+		A10115 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A02 /* Logger.swift */; };
+		A10116 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20601 /* Assets.xcassets */; };
+		A10117 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A20603 /* LaunchScreen.storyboard */; };
+		A10119 /* PromptAtelierShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A20E02 /* PromptAtelierShareExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A1011A /* PromptAtelierWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A20E03 /* PromptAtelierWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A1011B /* FolderRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20802 /* FolderRecord+Extensions.swift */; };
+		A1011C /* TagRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20803 /* TagRecord+Extensions.swift */; };
+
+		A10201 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20B01 /* ShareViewController.swift */; };
+		A10202 /* ShareItemExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20B02 /* ShareItemExtractor.swift */; };
+		A10203 /* ShareSaveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20B03 /* ShareSaveService.swift */; };
+		A10204 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20701 /* PersistenceController.swift */; };
+		A10205 /* PromptRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20703 /* PromptRepository.swift */; };
+		A10206 /* PromptRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20801 /* PromptRecord+Extensions.swift */; };
+		A10207 /* CaptureNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20901 /* CaptureNormalizer.swift */; };
+		A10208 /* CategorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20902 /* CategorizationService.swift */; };
+		A10209 /* SourceInferenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20903 /* SourceInferenceService.swift */; };
+		A1020A /* AppGroupPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A01 /* AppGroupPaths.swift */; };
+		A1020B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A02 /* Logger.swift */; };
+		A1020D /* FolderRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20802 /* FolderRecord+Extensions.swift */; };
+		A1020E /* TagRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20803 /* TagRecord+Extensions.swift */; };
+
+		A10301 /* PromptAtelierWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C01 /* PromptAtelierWidget.swift */; };
+		A10302 /* PromptWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C02 /* PromptWidgetProvider.swift */; };
+		A10303 /* PromptWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C03 /* PromptWidgetEntryView.swift */; };
+		A10304 /* WidgetDeepLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C04 /* WidgetDeepLinks.swift */; };
+		A10305 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20701 /* PersistenceController.swift */; };
+		A10306 /* PromptRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20703 /* PromptRepository.swift */; };
+		A10307 /* PromptRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20801 /* PromptRecord+Extensions.swift */; };
+		A10308 /* CaptureNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20901 /* CaptureNormalizer.swift */; };
+		A10309 /* CategorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20902 /* CategorizationService.swift */; };
+		A1030A /* SourceInferenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20903 /* SourceInferenceService.swift */; };
+		A1030B /* AppGroupPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A01 /* AppGroupPaths.swift */; };
+		A1030C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A02 /* Logger.swift */; };
+		A1030E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20601 /* Assets.xcassets */; };
+		A1030F /* FolderRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20802 /* FolderRecord+Extensions.swift */; };
+		A10310 /* TagRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20803 /* TagRecord+Extensions.swift */; };
+		A10401 /* PromptAtelierUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20F01 /* PromptAtelierUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A70001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A40010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A40002;
+			remoteInfo = PromptAtelierShareExtension;
+		};
+		A70002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A40010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A40003;
+			remoteInfo = PromptAtelierWidget;
+		};
+		A70003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A40010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A40001;
+			remoteInfo = PromptAtelier;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A50004 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A10119 /* PromptAtelierShareExtension.appex in Embed App Extensions */,
+				A1011A /* PromptAtelierWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A20101 /* PromptAtelierApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptAtelierApp.swift; sourceTree = "<group>"; };
+		A20102 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
+		A20103 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		A20201 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		A20202 /* PromptRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptRowView.swift; sourceTree = "<group>"; };
+		A20203 /* LibraryFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryFilterBar.swift; sourceTree = "<group>"; };
+		A20301 /* PromptDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptDetailView.swift; sourceTree = "<group>"; };
+		A20302 /* CopyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyButton.swift; sourceTree = "<group>"; };
+		A20401 /* FolderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderListView.swift; sourceTree = "<group>"; };
+		A20402 /* TagManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagementView.swift; sourceTree = "<group>"; };
+		A20501 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A20502 /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusView.swift; sourceTree = "<group>"; };
+		A20601 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20602 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A20603 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+
+		A20701 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		A20702 /* CoreDataModel.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodeld; path = CoreDataModel.xcdatamodeld; sourceTree = "<group>"; };
+		A20703 /* PromptRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptRepository.swift; sourceTree = "<group>"; };
+		A20801 /* PromptRecord+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PromptRecord+Extensions.swift"; sourceTree = "<group>"; };
+		A20802 /* FolderRecord+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FolderRecord+Extensions.swift"; sourceTree = "<group>"; };
+		A20803 /* TagRecord+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TagRecord+Extensions.swift"; sourceTree = "<group>"; };
+		A20804 /* PromptTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptTaxonomy.swift; sourceTree = "<group>"; };
+		A20901 /* CaptureNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureNormalizer.swift; sourceTree = "<group>"; };
+		A20902 /* CategorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorizationService.swift; sourceTree = "<group>"; };
+		A20903 /* SourceInferenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceInferenceService.swift; sourceTree = "<group>"; };
+		A20904 /* DeepLinkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkHandler.swift; sourceTree = "<group>"; };
+		A20A01 /* AppGroupPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupPaths.swift; sourceTree = "<group>"; };
+		A20A02 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+
+		A20B01 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		A20B02 /* ShareItemExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareItemExtractor.swift; sourceTree = "<group>"; };
+		A20B03 /* ShareSaveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSaveService.swift; sourceTree = "<group>"; };
+		A20B04 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+
+		A20C01 /* PromptAtelierWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptAtelierWidget.swift; sourceTree = "<group>"; };
+		A20C02 /* PromptWidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptWidgetProvider.swift; sourceTree = "<group>"; };
+		A20C03 /* PromptWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptWidgetEntryView.swift; sourceTree = "<group>"; };
+		A20C04 /* WidgetDeepLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDeepLinks.swift; sourceTree = "<group>"; };
+		A20C05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+
+		A20D01 /* PromptAtelier.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PromptAtelier.entitlements; sourceTree = SOURCE_ROOT; };
+		A20D02 /* PromptAtelierShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PromptAtelierShareExtension.entitlements; sourceTree = SOURCE_ROOT; };
+		A20D03 /* PromptAtelierWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PromptAtelierWidget.entitlements; sourceTree = SOURCE_ROOT; };
+
+		A20E01 /* PromptAtelier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PromptAtelier.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20E02 /* PromptAtelierShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PromptAtelierShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20E03 /* PromptAtelierWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PromptAtelierWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20F01 /* PromptAtelierUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptAtelierUITests.swift; sourceTree = "<group>"; };
+		A20F02 /* PromptAtelierUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PromptAtelierUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A50001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50011 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50021 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50031 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A30001 = {
+			isa = PBXGroup;
+			children = (
+				A30002 /* PromptAtelierApp */,
+				A30003 /* Shared */,
+				A30004 /* PromptAtelierShareExtension */,
+				A30005 /* PromptAtelierWidget */,
+				A30008 /* PromptAtelierUITests */,
+				A30006 /* Configuration */,
+				A30007 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A30002 /* PromptAtelierApp */ = {
+			isa = PBXGroup;
+			children = (
+				A31001 /* App */,
+				A31002 /* Features */,
+				A31003 /* Resources */,
+			);
+			path = PromptAtelierApp;
+			sourceTree = "<group>";
+		};
+		A30003 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				A32001 /* Persistence */,
+				A32002 /* Models */,
+				A32003 /* Services */,
+				A32004 /* Utilities */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A30004 /* PromptAtelierShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				A33001 /* Share */,
+				A33002 /* Resources */,
+			);
+			path = PromptAtelierShareExtension;
+			sourceTree = "<group>";
+		};
+		A30005 /* PromptAtelierWidget */ = {
+			isa = PBXGroup;
+			children = (
+				A34001 /* Widget */,
+				A34002 /* Resources */,
+			);
+			path = PromptAtelierWidget;
+			sourceTree = "<group>";
+		};
+		A30006 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				A20D01 /* PromptAtelier.entitlements */,
+				A20D02 /* PromptAtelierShareExtension.entitlements */,
+				A20D03 /* PromptAtelierWidget.entitlements */,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
+		A30007 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A20E01 /* PromptAtelier.app */,
+				A20E02 /* PromptAtelierShareExtension.appex */,
+				A20E03 /* PromptAtelierWidget.appex */,
+				A20F02 /* PromptAtelierUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+
+		A31001 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A20101 /* PromptAtelierApp.swift */,
+				A20102 /* AppContainer.swift */,
+				A20103 /* AppRouter.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A31002 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				A31101 /* Library */,
+				A31102 /* PromptDetail */,
+				A31103 /* Organize */,
+				A31104 /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A31003 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A20601 /* Assets.xcassets */,
+				A20603 /* LaunchScreen.storyboard */,
+				A20602 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A31101 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				A20201 /* LibraryView.swift */,
+				A20202 /* PromptRowView.swift */,
+				A20203 /* LibraryFilterBar.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		A31102 /* PromptDetail */ = {
+			isa = PBXGroup;
+			children = (
+				A20301 /* PromptDetailView.swift */,
+				A20302 /* CopyButton.swift */,
+			);
+			path = PromptDetail;
+			sourceTree = "<group>";
+		};
+		A31103 /* Organize */ = {
+			isa = PBXGroup;
+			children = (
+				A20401 /* FolderListView.swift */,
+				A20402 /* TagManagementView.swift */,
+			);
+			path = Organize;
+			sourceTree = "<group>";
+		};
+		A31104 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A20501 /* SettingsView.swift */,
+				A20502 /* SyncStatusView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+
+		A32001 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				A20701 /* PersistenceController.swift */,
+				A20702 /* CoreDataModel.xcdatamodeld */,
+				A20703 /* PromptRepository.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		A32002 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A20801 /* PromptRecord+Extensions.swift */,
+				A20802 /* FolderRecord+Extensions.swift */,
+				A20803 /* TagRecord+Extensions.swift */,
+				A20804 /* PromptTaxonomy.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A32003 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A20901 /* CaptureNormalizer.swift */,
+				A20902 /* CategorizationService.swift */,
+				A20903 /* SourceInferenceService.swift */,
+				A20904 /* DeepLinkHandler.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A32004 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A20A01 /* AppGroupPaths.swift */,
+				A20A02 /* Logger.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+
+		A33001 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				A20B01 /* ShareViewController.swift */,
+				A20B02 /* ShareItemExtractor.swift */,
+				A20B03 /* ShareSaveService.swift */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
+		A33002 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A20B04 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+
+		A34001 /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				A20C01 /* PromptAtelierWidget.swift */,
+				A20C02 /* PromptWidgetProvider.swift */,
+				A20C03 /* PromptWidgetEntryView.swift */,
+				A20C04 /* WidgetDeepLinks.swift */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
+		A34002 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A20C05 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A30008 /* PromptAtelierUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A20F01 /* PromptAtelierUITests.swift */,
+			);
+			path = PromptAtelierUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A40001 /* PromptAtelier */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A61002 /* Build configuration list for PBXNativeTarget "PromptAtelier" */;
+			buildPhases = (
+				A50002 /* Sources */,
+				A50001 /* Frameworks */,
+				A50003 /* Resources */,
+				A50004 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A70011 /* PBXTargetDependency */,
+				A70012 /* PBXTargetDependency */,
+			);
+			name = PromptAtelier;
+			productName = PromptAtelier;
+			productReference = A20E01 /* PromptAtelier.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A40002 /* PromptAtelierShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A61003 /* Build configuration list for PBXNativeTarget "PromptAtelierShareExtension" */;
+			buildPhases = (
+				A50012 /* Sources */,
+				A50011 /* Frameworks */,
+				A50013 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PromptAtelierShareExtension;
+			productName = PromptAtelierShareExtension;
+			productReference = A20E02 /* PromptAtelierShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A40003 /* PromptAtelierWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A61004 /* Build configuration list for PBXNativeTarget "PromptAtelierWidget" */;
+			buildPhases = (
+				A50022 /* Sources */,
+				A50021 /* Frameworks */,
+				A50023 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PromptAtelierWidget;
+			productName = PromptAtelierWidget;
+			productReference = A20E03 /* PromptAtelierWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A40004 /* PromptAtelierUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A61005 /* Build configuration list for PBXNativeTarget "PromptAtelierUITests" */;
+			buildPhases = (
+				A50032 /* Sources */,
+				A50031 /* Frameworks */,
+				A50033 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A70013 /* PBXTargetDependency */,
+			);
+			name = PromptAtelierUITests;
+			productName = PromptAtelierUITests;
+			productReference = A20F02 /* PromptAtelierUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A40010 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					A40001 = {
+						CreatedOnToolsVersion = 26.4;
+						ProvisioningStyle = Automatic;
+					};
+					A40002 = {
+						CreatedOnToolsVersion = 26.4;
+						ProvisioningStyle = Automatic;
+					};
+					A40003 = {
+						CreatedOnToolsVersion = 26.4;
+						ProvisioningStyle = Automatic;
+					};
+					A40004 = {
+						CreatedOnToolsVersion = 26.4;
+						ProvisioningStyle = Automatic;
+						TestTargetID = A40001;
+					};
+				};
+			};
+			buildConfigurationList = A61001 /* Build configuration list for PBXProject "PromptAtelier" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A30001;
+			productRefGroup = A30007 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A40001 /* PromptAtelier */,
+				A40002 /* PromptAtelierShareExtension */,
+				A40003 /* PromptAtelierWidget */,
+				A40004 /* PromptAtelierUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A50003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10116 /* Assets.xcassets in Resources */,
+				A10117 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50013 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50023 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1030E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50033 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A50002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10101 /* PromptAtelierApp.swift in Sources */,
+				A10102 /* AppContainer.swift in Sources */,
+				A10103 /* AppRouter.swift in Sources */,
+				A10104 /* LibraryView.swift in Sources */,
+				A10105 /* PromptRowView.swift in Sources */,
+				A10106 /* LibraryFilterBar.swift in Sources */,
+				A10107 /* PromptDetailView.swift in Sources */,
+				A10108 /* CopyButton.swift in Sources */,
+				A10109 /* FolderListView.swift in Sources */,
+				A1010A /* TagManagementView.swift in Sources */,
+				A1010B /* SettingsView.swift in Sources */,
+				A1010C /* SyncStatusView.swift in Sources */,
+				A1010D /* PersistenceController.swift in Sources */,
+				A1010E /* PromptRepository.swift in Sources */,
+				A1010F /* PromptRecord+Extensions.swift in Sources */,
+				A10110 /* CaptureNormalizer.swift in Sources */,
+				A10111 /* CategorizationService.swift in Sources */,
+				A10112 /* SourceInferenceService.swift in Sources */,
+				A10113 /* DeepLinkHandler.swift in Sources */,
+				A10114 /* AppGroupPaths.swift in Sources */,
+				A10115 /* Logger.swift in Sources */,
+				A1011B /* FolderRecord+Extensions.swift in Sources */,
+				A1011C /* TagRecord+Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50012 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10201 /* ShareViewController.swift in Sources */,
+				A10202 /* ShareItemExtractor.swift in Sources */,
+				A10203 /* ShareSaveService.swift in Sources */,
+				A10204 /* PersistenceController.swift in Sources */,
+				A10205 /* PromptRepository.swift in Sources */,
+				A10206 /* PromptRecord+Extensions.swift in Sources */,
+				A10207 /* CaptureNormalizer.swift in Sources */,
+				A10208 /* CategorizationService.swift in Sources */,
+				A10209 /* SourceInferenceService.swift in Sources */,
+				A1020A /* AppGroupPaths.swift in Sources */,
+				A1020B /* Logger.swift in Sources */,
+				A1020D /* FolderRecord+Extensions.swift in Sources */,
+				A1020E /* TagRecord+Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50022 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10301 /* PromptAtelierWidget.swift in Sources */,
+				A10302 /* PromptWidgetProvider.swift in Sources */,
+				A10303 /* PromptWidgetEntryView.swift in Sources */,
+				A10304 /* WidgetDeepLinks.swift in Sources */,
+				A10305 /* PersistenceController.swift in Sources */,
+				A10306 /* PromptRepository.swift in Sources */,
+				A10307 /* PromptRecord+Extensions.swift in Sources */,
+				A10308 /* CaptureNormalizer.swift in Sources */,
+				A10309 /* CategorizationService.swift in Sources */,
+				A1030A /* SourceInferenceService.swift in Sources */,
+				A1030B /* AppGroupPaths.swift in Sources */,
+				A1030C /* Logger.swift in Sources */,
+				A1030F /* FolderRecord+Extensions.swift in Sources */,
+				A10310 /* TagRecord+Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50032 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10401 /* PromptAtelierUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A70011 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A40002 /* PromptAtelierShareExtension */;
+			targetProxy = A70001 /* PBXContainerItemProxy */;
+		};
+		A70012 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A40003 /* PromptAtelierWidget */;
+			targetProxy = A70002 /* PBXContainerItemProxy */;
+		};
+		A70013 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A40001 /* PromptAtelier */;
+			targetProxy = A70003 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A60001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A60002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+
+		A60011 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = PromptAtelier.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PromptAtelierApp/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A60012 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = PromptAtelier.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PromptAtelierApp/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+
+		A60021 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = PromptAtelierShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PromptAtelierShareExtension/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A60022 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = PromptAtelierShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PromptAtelierShareExtension/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+
+		A60031 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PromptAtelierWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PromptAtelierWidget/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A60032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PromptAtelierWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PromptAtelierWidget/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A60041 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = PromptAtelier;
+			};
+			name = Debug;
+		};
+		A60042 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codex.promptatelier.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = PromptAtelier;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A61001 /* Build configuration list for PBXProject "PromptAtelier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A60001 /* Debug */,
+				A60002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A61002 /* Build configuration list for PBXNativeTarget "PromptAtelier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A60011 /* Debug */,
+				A60012 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A61003 /* Build configuration list for PBXNativeTarget "PromptAtelierShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A60021 /* Debug */,
+				A60022 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A61004 /* Build configuration list for PBXNativeTarget "PromptAtelierWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A60031 /* Debug */,
+				A60032 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A61005 /* Build configuration list for PBXNativeTarget "PromptAtelierUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A60041 /* Debug */,
+				A60042 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A40010 /* Project object */;
+}

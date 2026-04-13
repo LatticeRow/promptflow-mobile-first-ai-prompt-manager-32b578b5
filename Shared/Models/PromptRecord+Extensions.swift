@@ -1,0 +1,52 @@
+import CoreData
+import Foundation
+
+@objc(PromptRecord)
+public final class PromptRecord: NSManagedObject, Identifiable {
+}
+
+extension PromptRecord {
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<PromptRecord> {
+        NSFetchRequest<PromptRecord>(entityName: "PromptRecord")
+    }
+
+    @NSManaged public var body: String?
+    @NSManaged public var captureMethod: String?
+    @NSManaged public var classificationConfidence: Double
+    @NSManaged public var copyCount: Int32
+    @NSManaged public var createdAt: Date?
+    @NSManaged public var id: UUID?
+    @NSManaged public var isFavorite: Bool
+    @NSManaged public var isPinned: Bool
+    @NSManaged public var lastCopiedAt: Date?
+    @NSManaged public var sourceAppBundleID: String?
+    @NSManaged public var sourceType: String?
+    @NSManaged public var sourceURLString: String?
+    @NSManaged public var suggestedTaskTag: String?
+    @NSManaged public var suggestedToolTag: String?
+    @NSManaged public var title: String?
+    @NSManaged public var updatedAt: Date?
+    @NSManaged public var folder: FolderRecord?
+    @NSManaged public var tags: Set<TagRecord>?
+
+    var idValue: UUID {
+        id ?? UUID()
+    }
+
+    var displayTitle: String {
+        let fallback = "Untitled Prompt"
+        guard let title, !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return fallback
+        }
+
+        return title
+    }
+
+    var displayBody: String {
+        body ?? ""
+    }
+
+    var previewBody: String {
+        String(displayBody.prefix(120))
+    }
+}

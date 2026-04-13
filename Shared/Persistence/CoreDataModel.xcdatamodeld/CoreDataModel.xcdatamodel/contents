@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23504" systemVersion="24A335" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FolderRecord" representedClassName="FolderRecord" syncable="YES" codeGenerationType="manual/none">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sortOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="prompts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PromptRecord" inverseName="folder" inverseEntity="PromptRecord"/>
+    </entity>
+    <entity name="PromptRecord" representedClassName="PromptRecord" syncable="YES" codeGenerationType="manual/none">
+        <attribute name="body" optional="YES" attributeType="String"/>
+        <attribute name="captureMethod" optional="YES" attributeType="String" defaultValueString="share_extension"/>
+        <attribute name="classificationConfidence" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="copyCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isFavorite" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isPinned" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="lastCopiedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sourceAppBundleID" optional="YES" attributeType="String"/>
+        <attribute name="sourceType" optional="YES" attributeType="String"/>
+        <attribute name="sourceURLString" optional="YES" attributeType="String"/>
+        <attribute name="suggestedTaskTag" optional="YES" attributeType="String"/>
+        <attribute name="suggestedToolTag" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FolderRecord" inverseName="prompts" inverseEntity="FolderRecord"/>
+        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TagRecord" inverseName="prompts" inverseEntity="TagRecord"/>
+    </entity>
+    <entity name="TagRecord" representedClassName="TagRecord" syncable="YES" codeGenerationType="manual/none">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="kind" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="prompts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PromptRecord" inverseName="tags" inverseEntity="PromptRecord"/>
+    </entity>
+</model>
