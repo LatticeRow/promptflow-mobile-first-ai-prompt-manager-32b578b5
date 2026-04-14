@@ -16,7 +16,7 @@ struct PromptWidgetProvider: TimelineProvider {
         PromptWidgetEntry(
             date: .now,
             prompts: [
-                PromptWidgetItem(id: UUID(), title: "Welcome prompt", preview: "Your latest prompts appear here.")
+                PromptWidgetItem(id: UUID(), title: "Recent prompts", preview: "Your latest saves appear here.")
             ]
         )
     }
@@ -40,7 +40,7 @@ struct PromptWidgetProvider: TimelineProvider {
             return PromptWidgetEntry(
                 date: .now,
                 prompts: [
-                    PromptWidgetItem(id: UUID(), title: "Save from Share Sheet", preview: "Recent prompts appear here.")
+                    PromptWidgetItem(id: UUID(), title: "Share to save", preview: "Recent prompts appear here.")
                 ]
             )
         }

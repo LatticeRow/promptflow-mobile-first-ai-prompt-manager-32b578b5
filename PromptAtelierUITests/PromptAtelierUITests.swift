@@ -16,10 +16,6 @@ final class PromptAtelierUITests: XCTestCase {
         app.switches["settings.preferICloud"].tap()
         app.tabBars.buttons["Library"].tap()
 
-        let addSampleButton = app.buttons["library.addSample"]
-        XCTAssertTrue(addSampleButton.waitForExistence(timeout: 5))
-        addSampleButton.tap()
-
         let searchField = app.searchFields["Search prompts"]
         XCTAssertTrue(searchField.waitForExistence(timeout: 5))
         searchField.tap()

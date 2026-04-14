@@ -1,13 +1,35 @@
 import Foundation
 
 struct ShareSaveService {
-    func save(text: String?, url: URL?) {
+    @discardableResult
+    func save(payload: ExtractedShareItem, composerText: String?) -> Bool {
         let repository = PromptRepository(container: PersistenceController.sharedShareExtension.container)
-        _ = repository.savePrompt(
-            text: text,
-            url: url,
-            sourceAppBundleID: Bundle.main.bundleIdentifier,
-            captureMethod: "share_extension"
+        let primaryText = normalizedComposerText(composerText) ?? payload.text
+        let prompt = repository.savePrompt(
+            text: primaryText,
+            url: payload.url,
+            metadataTitle: payload.metadataTitle,
+            metadataText: payload.metadataText,
+            sourceAppBundleID: nil,
+            captureMethod: "share_extension",
+            shouldClassify: false
         )
+
+        guard prompt != nil else {
+            AppLogger.sharing.error("Share extension received content but could not create a prompt.")
+            return false
+        }
+
+        AppGroupPaths.recordSharedCapture()
+        return true
+    }
+
+    private func normalizedComposerText(_ value: String?) -> String? {
+        guard let value else {
+            return nil
+        }
+
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 }

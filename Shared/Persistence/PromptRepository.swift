@@ -86,19 +86,25 @@ final class PromptRepository {
     func savePrompt(
         text: String?,
         url: URL?,
+        metadataTitle: String? = nil,
+        metadataText: String? = nil,
         sourceAppBundleID: String?,
         captureMethod: String,
         folderID: UUID? = nil,
-        tagIDs: [UUID] = []
+        tagIDs: [UUID] = [],
+        shouldClassify: Bool = true
     ) -> PromptRecord? {
         do {
             let createdID = try createPrompt(
                 text: text,
                 url: url,
+                metadataTitle: metadataTitle,
+                metadataText: metadataText,
                 sourceAppBundleID: sourceAppBundleID,
                 captureMethod: captureMethod,
                 folderID: folderID,
-                tagIDs: tagIDs
+                tagIDs: tagIDs,
+                shouldClassify: shouldClassify
             )
             return prompt(id: createdID, in: container.viewContext)
         } catch {
@@ -111,16 +117,24 @@ final class PromptRepository {
     func createPrompt(
         text: String?,
         url: URL?,
+        metadataTitle: String? = nil,
+        metadataText: String? = nil,
         sourceAppBundleID: String?,
         captureMethod: String,
         folderID: UUID? = nil,
-        tagIDs: [UUID] = []
+        tagIDs: [UUID] = [],
+        shouldClassify: Bool = true
     ) throws -> UUID {
-        guard let normalized = normalizer.normalize(text: text, url: url) else {
+        guard let normalized = normalizer.normalize(
+            text: text,
+            url: url,
+            metadataTitle: metadataTitle,
+            metadataText: metadataText
+        ) else {
             throw PromptRepositoryError.invalidCapture
         }
 
-        let classification = categorizer.classify(normalized)
+        let classification = shouldClassify ? categorizer.classify(normalized) : nil
 
         return try performWrite { context in
             let prompt = PromptRecord(context: context)
@@ -129,9 +143,9 @@ final class PromptRepository {
             prompt.sourceType = normalized.sourceType
             prompt.sourceAppBundleID = sourceAppBundleID
             prompt.sourceURLString = normalized.sourceURLString
-            prompt.suggestedToolTag = classification.tool
-            prompt.suggestedTaskTag = classification.task
-            prompt.classificationConfidence = classification.confidence
+            prompt.suggestedToolTag = classification?.tool
+            prompt.suggestedTaskTag = classification?.task
+            prompt.classificationConfidence = classification?.confidence ?? 0
             prompt.captureMethod = captureMethod
             prompt.updatedAt = .now
 
@@ -144,6 +158,43 @@ final class PromptRepository {
             }
 
             return prompt.idValue
+        }
+    }
+
+    @discardableResult
+    func enrichPendingPrompts(limit: Int = 25) -> Int {
+        do {
+            return try performWrite { context in
+                let request = PromptRecord.fetchRequest()
+                request.fetchLimit = limit
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \PromptRecord.createdAt, ascending: false)]
+                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    NSPredicate(format: "captureMethod == %@", "share_extension"),
+                    NSCompoundPredicate(orPredicateWithSubpredicates: [
+                        NSPredicate(format: "suggestedToolTag == nil"),
+                        NSPredicate(format: "suggestedTaskTag == nil"),
+                        NSPredicate(format: "classificationConfidence <= 0")
+                    ])
+                ])
+
+                let promptsNeedingEnrichment = try context.fetch(request)
+                for prompt in promptsNeedingEnrichment {
+                    let normalized = normalizer.normalize(
+                        text: prompt.body,
+                        url: prompt.sourceURLString.flatMap(URL.init(string:)),
+                        metadataTitle: prompt.title
+                    ) ?? fallbackNormalizedCapture(for: prompt)
+                    let classification = categorizer.classify(normalized)
+                    prompt.suggestedToolTag = classification.tool
+                    prompt.suggestedTaskTag = classification.task
+                    prompt.classificationConfidence = classification.confidence
+                }
+
+                return promptsNeedingEnrichment.count
+            }
+        } catch {
+            AppLogger.persistence.error("Unable to enrich pending prompts: \(error.localizedDescription)")
+            return 0
         }
     }
 
@@ -479,6 +530,16 @@ final class PromptRepository {
         }
 
         return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+    }
+
+    private func fallbackNormalizedCapture(for prompt: PromptRecord) -> CaptureNormalizer.NormalizedCapture {
+        CaptureNormalizer.NormalizedCapture(
+            title: prompt.displayTitle,
+            body: prompt.displayBody,
+            sourceType: prompt.sourceType ?? "text",
+            sourceURLString: prompt.sourceURLString,
+            sourceHost: prompt.sourceURLString.flatMap { URLComponents(string: $0)?.host }
+        )
     }
 
     private func performWrite<T>(_ work: (NSManagedObjectContext) throws -> T) throws -> T {

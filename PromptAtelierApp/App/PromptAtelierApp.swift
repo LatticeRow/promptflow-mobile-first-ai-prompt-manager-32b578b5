@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct PromptAtelierApp: App {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var appContainer = AppContainer()
 
     var body: some Scene {
@@ -16,9 +17,18 @@ struct PromptAtelierApp: App {
                     if ProcessInfo.processInfo.arguments.contains("-promptatelier-seed-sample") {
                         appContainer.repository.seedSamplePromptsIfNeeded()
                     }
+
+                    appContainer.handleForegroundActivation()
                 }
                 .onOpenURL { url in
                     appContainer.router.handle(url: url)
+                }
+                .onChange(of: scenePhase) { _, newPhase in
+                    guard newPhase == .active else {
+                        return
+                    }
+
+                    appContainer.handleForegroundActivation()
                 }
         }
     }

@@ -5,9 +5,9 @@ struct SyncStatusView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label(isICloudPreferred ? "iCloud sync available when your account allows it." : "Local storage only.", systemImage: isICloudPreferred ? "icloud.fill" : "internaldrive.fill")
+            Label(isICloudPreferred ? "iCloud sync is used when available." : "Saved on this iPhone.", systemImage: isICloudPreferred ? "icloud.fill" : "internaldrive.fill")
                 .foregroundStyle(.white)
-            Text("Prompts always save on-device first.")
+            Text("Prompts save here first.")
                 .font(.footnote)
                 .foregroundStyle(.white.opacity(0.72))
         }

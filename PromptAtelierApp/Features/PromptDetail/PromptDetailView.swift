@@ -72,8 +72,8 @@ struct PromptDetailView: View {
     private func metadataCard(for prompt: PromptRecord) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             LabeledContent("Tool", value: prompt.suggestedToolTag ?? "Generic AI")
-            LabeledContent("Task", value: prompt.suggestedTaskTag ?? "General")
-            LabeledContent("Source", value: prompt.sourceType ?? "Text")
+            LabeledContent("Task", value: prompt.suggestedTaskTag ?? "Writing")
+            LabeledContent("Source", value: sourceLabel(for: prompt))
             LabeledContent("Copies", value: "\(prompt.copyCount)")
         }
         .font(.callout)
@@ -88,5 +88,14 @@ struct PromptDetailView: View {
 
     private func reloadPrompt() {
         prompt = appContainer.repository.prompt(id: promptID, in: viewContext)
+    }
+
+    private func sourceLabel(for prompt: PromptRecord) -> String {
+        switch prompt.sourceType?.lowercased() {
+        case "url":
+            return "Link"
+        default:
+            return "Text"
+        }
     }
 }

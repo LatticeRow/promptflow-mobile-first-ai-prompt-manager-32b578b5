@@ -6,7 +6,7 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section("Sync") {
-                Toggle("Prefer iCloud Sync", isOn: $preferICloudSync)
+                Toggle("Use iCloud Sync", isOn: $preferICloudSync)
                     .accessibilityIdentifier("settings.preferICloud")
                 SyncStatusView(isICloudPreferred: preferICloudSync)
                     .listRowInsets(EdgeInsets())
@@ -14,7 +14,7 @@ struct SettingsView: View {
             }
 
             Section("Share") {
-                Label("Use the share sheet to save text or links.", systemImage: "square.and.arrow.up.fill")
+                Label("Share text or links into Prompt Atelier.", systemImage: "square.and.arrow.up.fill")
                     .foregroundStyle(.white.opacity(0.88))
             }
         }

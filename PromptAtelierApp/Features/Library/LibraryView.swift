@@ -2,7 +2,6 @@ import CoreData
 import SwiftUI
 
 struct LibraryView: View {
-    @EnvironmentObject private var appContainer: AppContainer
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \PromptRecord.updatedAt, ascending: false)],
         animation: .default
@@ -30,7 +29,7 @@ struct LibraryView: View {
                     Text("Prompt Atelier")
                         .font(.largeTitle.weight(.bold))
                         .foregroundStyle(.white)
-                    Text("Capture once. Reuse fast.")
+                    Text("Save prompts fast.")
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.68))
                 }
@@ -64,31 +63,16 @@ struct LibraryView: View {
         .navigationTitle("Library")
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search prompts")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    appContainer.repository.seedSamplePromptsIfNeeded(forceInsert: true)
-                } label: {
-                    Label("Add Sample", systemImage: "plus.circle.fill")
-                }
-                .accessibilityIdentifier("library.addSample")
-            }
-        }
     }
 
     private var emptyState: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Nothing saved yet")
+            Text("No prompts yet")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.white)
-            Text("Share text or a link into Prompt Atelier, or add one sample to test the flow.")
+            Text("Share text or a link into Prompt Atelier.")
                 .font(.callout)
                 .foregroundStyle(.white.opacity(0.72))
-            Button("Add Sample Prompt") {
-                appContainer.repository.seedSamplePromptsIfNeeded(forceInsert: true)
-            }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("library.empty.addSample")
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)

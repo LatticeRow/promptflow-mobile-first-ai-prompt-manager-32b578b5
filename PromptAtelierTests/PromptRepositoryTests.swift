@@ -103,4 +103,55 @@ final class PromptRepositoryTests: XCTestCase {
         XCTAssertNil(repository.tag(id: tagID, in: context))
         XCTAssertNil(repository.folder(id: folderID, in: context))
     }
+
+    func testNormalizerPreservesURLMetadataAndCollapsesSpacing() throws {
+        let url = try XCTUnwrap(URL(string: "https://chatgpt.com/share/abc123"))
+        let normalized = try XCTUnwrap(
+            CaptureNormalizer().normalize(
+                text: "  Build a concise launch brief.  \n\n\nInclude risks. ",
+                url: url,
+                metadataTitle: "  Prompt Strategy  ",
+                metadataText: "  Prompt Strategy  "
+            )
+        )
+
+        XCTAssertEqual(normalized.title, "Prompt Strategy")
+        XCTAssertEqual(
+            normalized.body,
+            """
+            Build a concise launch brief.
+
+            Include risks.
+
+            https://chatgpt.com/share/abc123
+            """
+        )
+        XCTAssertEqual(normalized.sourceType, "url")
+        XCTAssertEqual(normalized.sourceURLString, "https://chatgpt.com/share/abc123")
+        XCTAssertEqual(normalized.sourceHost, "chatgpt.com")
+    }
+
+    func testDeferredEnrichmentClassifiesSharedCaptureOnForegroundPath() throws {
+        let promptID = try repository.createPrompt(
+            text: "Research a better system prompt structure for release planning.",
+            url: URL(string: "https://chatgpt.com/share/brief"),
+            metadataTitle: "Release Planning",
+            sourceAppBundleID: nil,
+            captureMethod: "share_extension",
+            shouldClassify: false
+        )
+
+        let context = persistenceController.container.viewContext
+        let pendingPrompt = try XCTUnwrap(repository.prompt(id: promptID, in: context))
+        XCTAssertNil(pendingPrompt.suggestedToolTag)
+        XCTAssertNil(pendingPrompt.suggestedTaskTag)
+        XCTAssertEqual(pendingPrompt.classificationConfidence, 0)
+
+        XCTAssertEqual(repository.enrichPendingPrompts(limit: 10), 1)
+
+        let enrichedPrompt = try XCTUnwrap(repository.prompt(id: promptID, in: context))
+        XCTAssertEqual(enrichedPrompt.suggestedToolTag, "ChatGPT")
+        XCTAssertEqual(enrichedPrompt.suggestedTaskTag, "Research")
+        XCTAssertGreaterThan(enrichedPrompt.classificationConfidence, 0.5)
+    }
 }

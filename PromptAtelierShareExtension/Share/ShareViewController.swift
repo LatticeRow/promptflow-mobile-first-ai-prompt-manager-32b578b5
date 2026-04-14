@@ -11,12 +11,15 @@ final class ShareViewController: SLComposeServiceViewController {
 
     override func didSelectPost() {
         let extensionItems = extensionContext?.inputItems as? [NSExtensionItem] ?? []
+        let composerText = contentText
 
         Task {
-            let extracted = await extractor.extract(from: extensionItems)
-            let text = contentText?.isEmpty == false ? contentText : extracted.text
-            saveService.save(text: text, url: extracted.url)
-            extensionContext?.completeRequest(returningItems: [])
+            let extractedShareItem = await extractor.extract(from: extensionItems)
+            _ = saveService.save(payload: extractedShareItem, composerText: composerText)
+
+            await MainActor.run {
+                extensionContext?.completeRequest(returningItems: [])
+            }
         }
     }
 
