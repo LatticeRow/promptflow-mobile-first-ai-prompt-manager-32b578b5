@@ -1,6 +1,6 @@
 import SwiftUI
 import UIKit
-import UniformTypeIdentifiers
+import WidgetKit
 
 struct CopyButton: View {
     let prompt: PromptRecord
@@ -9,14 +9,9 @@ struct CopyButton: View {
 
     var body: some View {
         Button {
-            UIPasteboard.general.setItems(
-                [[UTType.plainText.identifier: prompt.displayBody]],
-                options: [
-                    .localOnly: true,
-                    .expirationDate: Date().addingTimeInterval(300),
-                ]
-            )
+            UIPasteboard.general.string = prompt.displayBody
             repository.markPromptCopied(id: prompt.idValue)
+            WidgetCenter.shared.reloadAllTimelines()
 
             withAnimation(.easeOut(duration: 0.2)) {
                 didCopy = true
@@ -28,11 +23,12 @@ struct CopyButton: View {
                 }
             }
         } label: {
-            Label(didCopy ? "Copied" : "Copy Prompt", systemImage: didCopy ? "checkmark.circle.fill" : "doc.on.doc.fill")
+            Label(didCopy ? "Copied" : "Copy", systemImage: didCopy ? "checkmark.circle.fill" : "doc.on.doc.fill")
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
+        .disabled(prompt.displayBody.isEmpty)
         .accessibilityIdentifier("detail.copy")
     }
 }

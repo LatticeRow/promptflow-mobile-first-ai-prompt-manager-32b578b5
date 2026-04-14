@@ -13,6 +13,11 @@ struct PromptWidgetEntryView: View {
             ForEach(entry.prompts.prefix(2)) { prompt in
                 Link(destination: WidgetDeepLinks.promptURL(id: prompt.id)) {
                     VStack(alignment: .leading, spacing: 4) {
+                        if let badge = prompt.badge {
+                            Text(badge.uppercased())
+                                .font(.caption2.weight(.bold))
+                                .foregroundStyle(Color("AccentColor"))
+                        }
                         Text(prompt.title)
                             .font(.headline)
                             .lineLimit(1)

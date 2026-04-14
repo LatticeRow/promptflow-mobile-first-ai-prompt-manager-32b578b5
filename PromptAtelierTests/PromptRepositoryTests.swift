@@ -201,4 +201,35 @@ final class PromptRepositoryTests: XCTestCase {
         XCTAssertEqual(prompt.suggestedTaskTag, PromptTaxonomy.TaskTag.brainstorming.rawValue)
         XCTAssertEqual(prompt.classificationConfidence, 1, accuracy: 0.0001)
     }
+
+    func testPromptAssignmentAndRecentCopyOrdering() throws {
+        let folderID = try repository.createFolder(name: "Client Work", sortOrder: 0)
+        let customTagID = try repository.createTag(name: "Launch", kind: "custom")
+
+        let olderPromptID = try repository.createPrompt(
+            text: "Draft a launch note for the mobile app.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+        let newerPromptID = try repository.createPrompt(
+            text: "Refactor the library screen for better readability.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+
+        try repository.assignPrompt(id: newerPromptID, toFolderID: folderID)
+        try repository.setTags(forPromptID: newerPromptID, tagIDs: [customTagID])
+
+        _ = repository.markPromptCopied(id: olderPromptID, copiedAt: Date(timeIntervalSinceReferenceDate: 100))
+        _ = repository.markPromptCopied(id: newerPromptID, copiedAt: Date(timeIntervalSinceReferenceDate: 200))
+
+        let recentlyCopied = repository.recentlyCopiedPrompts(limit: 2)
+        XCTAssertEqual(recentlyCopied.map(\.idValue), [newerPromptID, olderPromptID])
+
+        let prompt = try XCTUnwrap(repository.prompt(id: newerPromptID, in: persistenceController.container.viewContext))
+        XCTAssertEqual(prompt.folder?.idValue, folderID)
+        XCTAssertEqual(prompt.sortedTags.map(\.idValue), [customTagID])
+    }
 }

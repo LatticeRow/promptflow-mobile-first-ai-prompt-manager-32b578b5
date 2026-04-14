@@ -50,6 +50,7 @@ private struct RootTabView: View {
             }
             .tabItem {
                 Label("Library", systemImage: "square.stack.3d.up.fill")
+                    .accessibilityIdentifier("tab.library")
             }
             .tag(AppRouter.Tab.library)
 
@@ -58,6 +59,7 @@ private struct RootTabView: View {
             }
             .tabItem {
                 Label("Organize", systemImage: "folder.fill.badge.person.crop")
+                    .accessibilityIdentifier("tab.organize")
             }
             .tag(AppRouter.Tab.organize)
 
@@ -66,6 +68,7 @@ private struct RootTabView: View {
             }
             .tabItem {
                 Label("Settings", systemImage: "gearshape.fill")
+                    .accessibilityIdentifier("tab.settings")
             }
             .tag(AppRouter.Tab.settings)
         }

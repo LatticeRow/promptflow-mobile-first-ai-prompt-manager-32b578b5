@@ -33,12 +33,34 @@ struct PromptRowView: View {
                     TagBadge(title: taskTag)
                 }
             }
+
+            HStack(spacing: 10) {
+                if let folderName = prompt.folder?.displayName {
+                    Label(folderName, systemImage: "folder.fill")
+                        .foregroundStyle(.white.opacity(0.68))
+                }
+
+                if prompt.copyCount > 0 {
+                    Label("\(prompt.copyCount)", systemImage: "doc.on.doc")
+                        .foregroundStyle(.white.opacity(0.68))
+                }
+
+                if let lastCopiedAt = prompt.lastCopiedAt {
+                    Text(lastCopiedAt, style: .relative)
+                        .foregroundStyle(Color("AccentColor").opacity(0.9))
+                }
+            }
+            .font(.caption)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color.white.opacity(0.06))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color.white.opacity(0.06), lineWidth: 1)
         )
     }
 }

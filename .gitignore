@@ -15,9 +15,12 @@ build/
 DerivedData/
 *.xcresult
 *.xctestrun
+*.xcarchive
 *.dSYM
 *.ipa
 *.orig
+*.moved-aside
+*.resultbundle
 
 # Swift Package Manager
 .build/
@@ -33,3 +36,7 @@ fastlane/test_output/
 # Simulator captures
 *.trace
 *.diag
+
+# Editor settings
+.idea/
+.vscode/

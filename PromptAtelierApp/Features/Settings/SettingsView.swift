@@ -6,7 +6,7 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section("Sync") {
-                Toggle("Use iCloud Sync", isOn: $preferICloudSync)
+                Toggle("Use iCloud", isOn: $preferICloudSync)
                     .accessibilityIdentifier("settings.preferICloud")
                 SyncStatusView(isICloudPreferred: preferICloudSync)
                     .listRowInsets(EdgeInsets())

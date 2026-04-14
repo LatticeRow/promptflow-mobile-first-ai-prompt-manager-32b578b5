@@ -2,13 +2,7 @@ import SwiftUI
 
 struct TagManagementView: View {
     private var suggestedTags: [String] {
-        [
-            PromptTaxonomy.ToolTag.chatGPT.rawValue,
-            PromptTaxonomy.ToolTag.claude.rawValue,
-            PromptTaxonomy.ToolTag.codingAI.rawValue,
-            PromptTaxonomy.TaskTag.writing.rawValue,
-            PromptTaxonomy.TaskTag.research.rawValue,
-        ]
+        PromptTaxonomy.ToolTag.allCases.map(\.rawValue) + PromptTaxonomy.TaskTag.allCases.map(\.rawValue)
     }
 
     var body: some View {
