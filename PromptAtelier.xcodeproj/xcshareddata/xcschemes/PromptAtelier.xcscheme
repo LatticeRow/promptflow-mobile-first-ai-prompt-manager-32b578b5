@@ -32,6 +32,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A40005"
+               BuildableName = "PromptAtelierTests.xctest"
+               BlueprintName = "PromptAtelierTests"
+               ReferencedContainer = "container:PromptAtelier.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "A40004"
                BuildableName = "PromptAtelierUITests.xctest"
                BlueprintName = "PromptAtelierUITests"

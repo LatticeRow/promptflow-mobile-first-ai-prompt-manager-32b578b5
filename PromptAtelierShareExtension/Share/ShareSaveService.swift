@@ -2,7 +2,7 @@ import Foundation
 
 struct ShareSaveService {
     func save(text: String?, url: URL?) {
-        let repository = PromptRepository(container: PersistenceController(target: .shareExtension).container)
+        let repository = PromptRepository(container: PersistenceController.sharedShareExtension.container)
         _ = repository.savePrompt(
             text: text,
             url: url,

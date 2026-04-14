@@ -31,7 +31,7 @@ struct PromptWidgetProvider: TimelineProvider {
     }
 
     private func makeEntry() -> PromptWidgetEntry {
-        let repository = PromptRepository(container: PersistenceController(target: .widget).container)
+        let repository = PromptRepository(container: PersistenceController.sharedWidget.container)
         let prompts = repository.latestPrompts(limit: 3).map {
             PromptWidgetItem(id: $0.idValue, title: $0.displayTitle, preview: $0.previewBody)
         }

@@ -10,7 +10,23 @@ struct PersistenceController {
         var usesCloudKit: Bool {
             self == .mainApp
         }
+
+        var transactionAuthor: String {
+            switch self {
+            case .mainApp:
+                return "PromptAtelier.app"
+            case .shareExtension:
+                return "PromptAtelier.shareExtension"
+            case .widget:
+                return "PromptAtelier.widget"
+            }
+        }
     }
+
+    static let sharedApp = PersistenceController(target: .mainApp)
+    static let sharedShareExtension = PersistenceController(target: .shareExtension)
+    static let sharedWidget = PersistenceController(target: .widget)
+    static let preview = PersistenceController(target: .mainApp, inMemory: true)
 
     let container: NSPersistentCloudKitContainer
 
@@ -18,35 +34,43 @@ struct PersistenceController {
         container = Self.makeContainer(target: target, inMemory: inMemory)
     }
 
+    func newBackgroundContext() -> NSManagedObjectContext {
+        let context = container.newBackgroundContext()
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        context.automaticallyMergesChangesFromParent = true
+        return context
+    }
+
     private static func makeContainer(target: Target, inMemory: Bool) -> NSPersistentCloudKitContainer {
-        let model = ManagedObjectModelFactory.makeModel()
+        let model = ManagedObjectModelFactory.model
 
         func configuredContainer(usesCloudKit: Bool) -> NSPersistentCloudKitContainer {
             let container = NSPersistentCloudKitContainer(name: "CoreDataModel", managedObjectModel: model)
-            let description = NSPersistentStoreDescription()
-
-            if inMemory {
-                description.url = URL(fileURLWithPath: "/dev/null")
-            } else {
-                description.url = AppGroupPaths.storeURL()
-            }
-
+            let description = inMemory
+                ? NSPersistentStoreDescription()
+                : NSPersistentStoreDescription(url: AppGroupPaths.storeURL())
+            description.type = inMemory ? NSInMemoryStoreType : NSSQLiteStoreType
+            description.shouldInferMappingModelAutomatically = true
+            description.shouldMigrateStoreAutomatically = true
             description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
             description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-            description.cloudKitContainerOptions = usesCloudKit
+            if !inMemory {
+                description.setOption(FileProtectionType.completeUntilFirstUserAuthentication as NSObject, forKey: NSPersistentStoreFileProtectionKey)
+            }
+            description.cloudKitContainerOptions = usesCloudKit && !inMemory
                 ? NSPersistentCloudKitContainerOptions(containerIdentifier: AppGroupPaths.cloudKitContainerIdentifier)
                 : nil
-
             container.persistentStoreDescriptions = [description]
             return container
         }
 
-        func load(_ container: NSPersistentCloudKitContainer) -> Error? {
+        func load(_ container: NSPersistentCloudKitContainer, author: String) -> Error? {
             let semaphore = DispatchSemaphore(value: 0)
             var loadError: Error?
 
             container.loadPersistentStores { _, error in
                 loadError = error
+                configureContexts(for: container, author: author)
                 semaphore.signal()
             }
 
@@ -55,34 +79,36 @@ struct PersistenceController {
         }
 
         let preferredContainer = configuredContainer(usesCloudKit: target.usesCloudKit)
-        if let loadError = load(preferredContainer) {
-            guard target.usesCloudKit else {
+        if let loadError = load(preferredContainer, author: target.transactionAuthor) {
+            guard target.usesCloudKit, !inMemory else {
                 fatalError("Failed to load persistent stores: \(loadError.localizedDescription)")
             }
 
             AppLogger.persistence.error("CloudKit store unavailable, falling back to local store: \(loadError.localizedDescription)")
             let fallbackContainer = configuredContainer(usesCloudKit: false)
 
-            if let fallbackError = load(fallbackContainer) {
+            if let fallbackError = load(fallbackContainer, author: target.transactionAuthor) {
                 fatalError("Failed to load fallback persistent stores: \(fallbackError.localizedDescription)")
             }
 
-            configureViewContext(for: fallbackContainer)
             return fallbackContainer
         }
 
-        configureViewContext(for: preferredContainer)
         return preferredContainer
     }
 
-    private static func configureViewContext(for container: NSPersistentCloudKitContainer) {
+    private static func configureContexts(for container: NSPersistentCloudKitContainer, author: String) {
+        container.viewContext.name = author
+        container.viewContext.transactionAuthor = author
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        container.viewContext.transactionAuthor = "PromptAtelier"
+        container.viewContext.shouldDeleteInaccessibleFaults = true
     }
 }
 
 private enum ManagedObjectModelFactory {
+    static let model = makeModel()
+
     static func makeModel() -> NSManagedObjectModel {
         let model = NSManagedObjectModel()
 

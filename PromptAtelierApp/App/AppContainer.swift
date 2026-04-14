@@ -8,10 +8,11 @@ final class AppContainer: ObservableObject {
     let router = AppRouter()
 
     init() {
-        let controller = PersistenceController(
-            target: .mainApp,
-            inMemory: ProcessInfo.processInfo.arguments.contains("-promptatelier-ui-testing")
-        )
+        let controller = if ProcessInfo.processInfo.arguments.contains("-promptatelier-ui-testing") {
+            PersistenceController(target: .mainApp, inMemory: true)
+        } else {
+            PersistenceController.sharedApp
+        }
         persistenceController = controller
         repository = PromptRepository(container: controller.container)
     }

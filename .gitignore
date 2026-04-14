@@ -1,4 +1,5 @@
 .DS_Store
+.agentsight-codex-last.txt
 
 # Xcode user data
 *.xcuserstate
@@ -9,6 +10,7 @@ xcuserdata/
 # Build products
 build/
 DerivedData/
+*.xcresult
 
 # Swift Package Manager
 .build/

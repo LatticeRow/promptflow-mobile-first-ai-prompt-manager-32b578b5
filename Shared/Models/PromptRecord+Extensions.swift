@@ -3,6 +3,18 @@ import Foundation
 
 @objc(PromptRecord)
 public final class PromptRecord: NSManagedObject, Identifiable {
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        id = UUID()
+        createdAt = .now
+        updatedAt = .now
+        captureMethod = "share_extension"
+        sourceType = "text"
+        copyCount = 0
+        isPinned = false
+        isFavorite = false
+        classificationConfidence = 0
+    }
 }
 
 extension PromptRecord {
@@ -48,5 +60,11 @@ extension PromptRecord {
 
     var previewBody: String {
         String(displayBody.prefix(120))
+    }
+
+    var sortedTags: [TagRecord] {
+        (tags ?? []).sorted {
+            $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending
+        }
     }
 }
