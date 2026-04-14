@@ -558,6 +558,8 @@ final class PromptRepository {
     private func performWrite<T>(_ work: (NSManagedObjectContext) throws -> T) throws -> T {
         let context = container.newBackgroundContext()
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        context.name = Bundle.main.bundleIdentifier ?? "PromptAtelier.backgroundContext"
+        context.transactionAuthor = Bundle.main.bundleIdentifier ?? "PromptAtelier"
 
         var result: Result<T, Error>?
         context.performAndWait {

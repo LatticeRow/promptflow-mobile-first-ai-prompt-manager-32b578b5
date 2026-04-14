@@ -2,6 +2,12 @@ import CoreData
 import Foundation
 
 struct PersistenceController {
+    struct SyncConfiguration {
+        let cloudKitRequested: Bool
+        let cloudKitEnabled: Bool
+        let fallbackReason: String?
+    }
+
     enum Target {
         case mainApp
         case shareExtension
@@ -29,9 +35,12 @@ struct PersistenceController {
     static let preview = PersistenceController(target: .mainApp, inMemory: true)
 
     let container: NSPersistentCloudKitContainer
+    let syncConfiguration: SyncConfiguration
 
     init(target: Target, inMemory: Bool = false) {
-        container = Self.makeContainer(target: target, inMemory: inMemory)
+        let result = Self.makeContainer(target: target, inMemory: inMemory)
+        container = result.container
+        syncConfiguration = result.syncConfiguration
     }
 
     func newBackgroundContext() -> NSManagedObjectContext {
@@ -41,8 +50,12 @@ struct PersistenceController {
         return context
     }
 
-    private static func makeContainer(target: Target, inMemory: Bool) -> NSPersistentCloudKitContainer {
+    private static func makeContainer(
+        target: Target,
+        inMemory: Bool
+    ) -> (container: NSPersistentCloudKitContainer, syncConfiguration: SyncConfiguration) {
         let model = ManagedObjectModelFactory.model
+        let wantsCloudKit = target.usesCloudKit && !inMemory
 
         func configuredContainer(usesCloudKit: Bool) -> NSPersistentCloudKitContainer {
             let container = NSPersistentCloudKitContainer(name: "CoreDataModel", managedObjectModel: model)
@@ -57,9 +70,13 @@ struct PersistenceController {
             if !inMemory {
                 description.setOption(FileProtectionType.completeUntilFirstUserAuthentication as NSObject, forKey: NSPersistentStoreFileProtectionKey)
             }
-            description.cloudKitContainerOptions = usesCloudKit && !inMemory
-                ? NSPersistentCloudKitContainerOptions(containerIdentifier: AppGroupPaths.cloudKitContainerIdentifier)
-                : nil
+            if usesCloudKit && !inMemory {
+                description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(
+                    containerIdentifier: AppGroupPaths.cloudKitContainerIdentifier
+                )
+            } else {
+                description.cloudKitContainerOptions = nil
+            }
             container.persistentStoreDescriptions = [description]
             return container
         }
@@ -78,9 +95,9 @@ struct PersistenceController {
             return loadError
         }
 
-        let preferredContainer = configuredContainer(usesCloudKit: target.usesCloudKit)
+        let preferredContainer = configuredContainer(usesCloudKit: wantsCloudKit)
         if let loadError = load(preferredContainer, author: target.transactionAuthor) {
-            guard target.usesCloudKit, !inMemory else {
+            guard wantsCloudKit else {
                 fatalError("Failed to load persistent stores: \(loadError.localizedDescription)")
             }
 
@@ -91,10 +108,24 @@ struct PersistenceController {
                 fatalError("Failed to load fallback persistent stores: \(fallbackError.localizedDescription)")
             }
 
-            return fallbackContainer
+            return (
+                fallbackContainer,
+                SyncConfiguration(
+                    cloudKitRequested: wantsCloudKit,
+                    cloudKitEnabled: false,
+                    fallbackReason: loadError.localizedDescription
+                )
+            )
         }
 
-        return preferredContainer
+        return (
+            preferredContainer,
+            SyncConfiguration(
+                cloudKitRequested: wantsCloudKit,
+                cloudKitEnabled: wantsCloudKit,
+                fallbackReason: nil
+            )
+        )
     }
 
     private static func configureContexts(for container: NSPersistentCloudKitContainer, author: String) {

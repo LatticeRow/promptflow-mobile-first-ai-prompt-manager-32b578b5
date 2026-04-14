@@ -1,14 +1,12 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("preferICloudSync") private var preferICloudSync = true
+    @EnvironmentObject private var appContainer: AppContainer
 
     var body: some View {
         List {
             Section("Sync") {
-                Toggle("Use iCloud", isOn: $preferICloudSync)
-                    .accessibilityIdentifier("settings.preferICloud")
-                SyncStatusView(isICloudPreferred: preferICloudSync)
+                SyncStatusView(snapshot: appContainer.syncMonitor.snapshot)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
             }

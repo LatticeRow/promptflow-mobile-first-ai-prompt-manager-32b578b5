@@ -85,8 +85,7 @@ final class PromptAtelierUITests: XCTestCase {
 
         for identifier in taskIdentifiers {
             let button = app.buttons[identifier]
-            XCTAssertTrue(button.waitForExistence(timeout: 5))
-            button.tap()
+            tapWhenVisible(button, in: app)
         }
 
         let newFolderField = app.textFields["organize.newFolder"]
@@ -140,6 +139,41 @@ final class PromptAtelierUITests: XCTestCase {
         XCTAssertTrue(app.buttons["All tags"].waitForExistence(timeout: 5))
         app.buttons["All tags"].tap()
     }
+
+    @MainActor
+    func testSettingsShowsLocalOnlySyncMessaging() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-promptatelier-ui-testing", "-promptatelier-sync-local-only"]
+        app.launch()
+
+        app.tabBars.buttons["tab.settings"].tap()
+
+        XCTAssertTrue(app.staticTexts["This iPhone only"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Your prompts stay available here even when iCloud is unavailable."].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testSettingsShowsOfflineAndSignedOutSyncMessaging() throws {
+        let offlineApp = XCUIApplication()
+        offlineApp.launchArguments = ["-promptatelier-ui-testing", "-promptatelier-sync-offline"]
+        offlineApp.launch()
+
+        offlineApp.tabBars.buttons["tab.settings"].tap()
+
+        XCTAssertTrue(offlineApp.staticTexts["Offline right now"].waitForExistence(timeout: 5))
+        XCTAssertTrue(offlineApp.staticTexts["Your prompts stay usable here and sync when your connection returns."].waitForExistence(timeout: 5))
+
+        offlineApp.terminate()
+
+        let signedOutApp = XCUIApplication()
+        signedOutApp.launchArguments = ["-promptatelier-ui-testing", "-promptatelier-sync-no-account"]
+        signedOutApp.launch()
+
+        signedOutApp.tabBars.buttons["tab.settings"].tap()
+
+        XCTAssertTrue(signedOutApp.staticTexts["Sync is off"].waitForExistence(timeout: 5))
+        XCTAssertTrue(signedOutApp.staticTexts["Your prompts stay on this iPhone until iCloud is turned on."].waitForExistence(timeout: 5))
+    }
 }
 
 private extension XCUIElementQuery {
@@ -161,4 +195,15 @@ private func dismissKeyboardIfPresent(in app: XCUIApplication) {
             return
         }
     }
+}
+
+private func tapWhenVisible(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 5) {
+    XCTAssertTrue(element.waitForExistence(timeout: 5))
+
+    for _ in 0..<maxSwipes where !element.isHittable {
+        app.swipeUp()
+    }
+
+    XCTAssertTrue(element.isHittable)
+    element.tap()
 }

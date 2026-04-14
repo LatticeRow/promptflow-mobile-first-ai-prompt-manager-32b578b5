@@ -72,7 +72,7 @@ struct PromptDetailView: View {
             if let prompt {
                 PromptOrganizerSheet(prompt: prompt, onSave: saveChanges)
                     .environmentObject(appContainer)
-                    .presentationDetents([.medium, .large])
+                    .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             }
         }
