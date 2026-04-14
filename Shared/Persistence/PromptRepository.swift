@@ -134,7 +134,7 @@ final class PromptRepository {
             throw PromptRepositoryError.invalidCapture
         }
 
-        let classification = shouldClassify ? categorizer.classify(normalized) : nil
+        let classification = shouldClassify ? categorizer.classify(normalized, sourceAppBundleID: sourceAppBundleID) : nil
 
         return try performWrite { context in
             let prompt = PromptRecord(context: context)
@@ -184,7 +184,7 @@ final class PromptRepository {
                         url: prompt.sourceURLString.flatMap(URL.init(string:)),
                         metadataTitle: prompt.title
                     ) ?? fallbackNormalizedCapture(for: prompt)
-                    let classification = categorizer.classify(normalized)
+                    let classification = categorizer.classify(normalized, sourceAppBundleID: prompt.sourceAppBundleID)
                     prompt.suggestedToolTag = classification.tool
                     prompt.suggestedTaskTag = classification.task
                     prompt.classificationConfidence = classification.confidence
@@ -385,6 +385,19 @@ final class PromptRepository {
             let prompt = try fetchPrompt(id: promptID, in: context)
             prompt.tags = try Set(tagIDs.map { try fetchTag(id: $0, in: context) })
             prompt.updatedAt = .now
+        }
+    }
+
+    func recategorizePrompt(
+        id: UUID,
+        toolTag: PromptTaxonomy.ToolTag,
+        taskTag: PromptTaxonomy.TaskTag,
+        confidence: Double = 1
+    ) throws {
+        try mutatePrompt(id: id) { prompt in
+            prompt.suggestedToolTag = toolTag.rawValue
+            prompt.suggestedTaskTag = taskTag.rawValue
+            prompt.classificationConfidence = confidence
         }
     }
 

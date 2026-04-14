@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 struct CopyButton: View {
     let prompt: PromptRecord
@@ -8,7 +9,13 @@ struct CopyButton: View {
 
     var body: some View {
         Button {
-            UIPasteboard.general.string = prompt.displayBody
+            UIPasteboard.general.setItems(
+                [[UTType.plainText.identifier: prompt.displayBody]],
+                options: [
+                    .localOnly: true,
+                    .expirationDate: Date().addingTimeInterval(300),
+                ]
+            )
             repository.markPromptCopied(id: prompt.idValue)
 
             withAnimation(.easeOut(duration: 0.2)) {

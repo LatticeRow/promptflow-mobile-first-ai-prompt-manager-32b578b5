@@ -2,59 +2,73 @@ import Foundation
 
 struct SourceInferenceService {
     struct InferredSource {
-        let tool: String
+        let tool: PromptTaxonomy.ToolTag
         let sourceLabel: String?
+        let confidence: Double
     }
 
-    func inferTool(from capture: CaptureNormalizer.NormalizedCapture) -> String {
-        inferSource(from: capture).tool
+    func inferTool(from capture: CaptureNormalizer.NormalizedCapture, sourceAppBundleID: String?) -> PromptTaxonomy.ToolTag {
+        inferSource(from: capture, sourceAppBundleID: sourceAppBundleID).tool
     }
 
-    func inferSource(from capture: CaptureNormalizer.NormalizedCapture) -> InferredSource {
+    func inferSource(from capture: CaptureNormalizer.NormalizedCapture, sourceAppBundleID: String?) -> InferredSource {
         let host = capture.sourceHost ?? normalizedHost(from: capture.sourceURLString)
-        if let host, let tool = toolForKnownHost(host) {
-            return InferredSource(tool: tool, sourceLabel: host)
+        if let host, let inference = toolForKnownHost(host) {
+            return InferredSource(tool: inference.tool, sourceLabel: host, confidence: inference.confidence)
         }
 
-        let haystack = [capture.title, capture.body, capture.sourceURLString ?? ""].joined(separator: " ").lowercased()
-
-        if haystack.contains("claude") {
-            return InferredSource(tool: "Claude", sourceLabel: host)
+        if let sourceAppBundleID, let inference = toolForKnownBundleID(sourceAppBundleID) {
+            return InferredSource(tool: inference.tool, sourceLabel: readableSourceLabel(bundleID: sourceAppBundleID), confidence: inference.confidence)
         }
 
-        if haystack.contains("midjourney") || haystack.contains("image prompt") {
-            return InferredSource(tool: "Midjourney", sourceLabel: host)
+        let haystack = [capture.title, capture.body, capture.sourceURLString ?? "", sourceAppBundleID ?? ""]
+            .joined(separator: " ")
+            .lowercased()
+
+        for tool in PromptTaxonomy.ToolTag.allCases where tool != .genericAI {
+            if tool.keywordHints.contains(where: { haystack.contains($0) }) {
+                return InferredSource(tool: tool, sourceLabel: host ?? readableSourceLabel(bundleID: sourceAppBundleID), confidence: 0.78)
+            }
         }
 
-        if haystack.contains("chatgpt") {
-            return InferredSource(tool: "ChatGPT", sourceLabel: host)
-        }
-
-        if haystack.contains("code") || haystack.contains("refactor") || haystack.contains("bug") {
-            return InferredSource(tool: "Coding AI", sourceLabel: host)
-        }
-
-        return InferredSource(tool: "Generic AI", sourceLabel: host)
+        return InferredSource(tool: .genericAI, sourceLabel: host ?? readableSourceLabel(bundleID: sourceAppBundleID), confidence: 0.42)
     }
 
-    private func toolForKnownHost(_ host: String) -> String? {
-        if host.contains("chatgpt.com") || host.contains("openai.com") {
-            return "ChatGPT"
-        }
-
-        if host.contains("claude.ai") || host.contains("anthropic.com") {
-            return "Claude"
-        }
-
-        if host.contains("midjourney.com") {
-            return "Midjourney"
-        }
-
-        if host.contains("github.com") || host.contains("copilot") {
-            return "Coding AI"
+    private func toolForKnownHost(_ host: String) -> (tool: PromptTaxonomy.ToolTag, confidence: Double)? {
+        for tool in PromptTaxonomy.ToolTag.allCases where tool != .genericAI {
+            if tool.sourceHosts.contains(where: { host.contains($0) }) {
+                return (tool, 0.97)
+            }
         }
 
         return nil
+    }
+
+    private func toolForKnownBundleID(_ bundleID: String) -> (tool: PromptTaxonomy.ToolTag, confidence: Double)? {
+        let normalizedBundleID = bundleID.lowercased()
+
+        for tool in PromptTaxonomy.ToolTag.allCases where tool != .genericAI {
+            if tool.sourceBundleHints.contains(where: { normalizedBundleID.contains($0) }) {
+                return (tool, 0.9)
+            }
+        }
+
+        return nil
+    }
+
+    private func readableSourceLabel(bundleID: String?) -> String? {
+        guard let bundleID else {
+            return nil
+        }
+
+        let components = bundleID.split(separator: ".")
+        guard let lastComponent = components.last else {
+            return bundleID
+        }
+
+        return lastComponent
+            .replacingOccurrences(of: "-", with: " ")
+            .capitalized
     }
 
     private func normalizedHost(from urlString: String?) -> String? {

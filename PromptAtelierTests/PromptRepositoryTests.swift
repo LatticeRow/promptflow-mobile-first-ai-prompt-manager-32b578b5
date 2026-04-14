@@ -154,4 +154,51 @@ final class PromptRepositoryTests: XCTestCase {
         XCTAssertEqual(enrichedPrompt.suggestedTaskTag, "Research")
         XCTAssertGreaterThan(enrichedPrompt.classificationConfidence, 0.5)
     }
+
+    func testCategorizerUsesSourceHintsAndNaturalLanguageScoring() throws {
+        let service = CategorizationService()
+
+        let codingCapture = try XCTUnwrap(
+            CaptureNormalizer().normalize(
+                text: "Debug this SwiftUI view and refactor the async state handling.",
+                url: nil
+            )
+        )
+        let codingClassification = service.classify(codingCapture, sourceAppBundleID: "com.apple.dt.xcode")
+        XCTAssertEqual(codingClassification.tool, PromptTaxonomy.ToolTag.codingAI.rawValue)
+        XCTAssertEqual(codingClassification.task, PromptTaxonomy.TaskTag.coding.rawValue)
+        XCTAssertGreaterThan(codingClassification.confidence, 0.8)
+
+        let imageCapture = try XCTUnwrap(
+            CaptureNormalizer().normalize(
+                text: "Create a logo prompt with cinematic lighting and strong negative space.",
+                url: URL(string: "https://www.midjourney.com/imagine")!,
+                metadataTitle: "Luxury logo prompt"
+            )
+        )
+        let imageClassification = service.classify(imageCapture, sourceAppBundleID: nil)
+        XCTAssertEqual(imageClassification.tool, PromptTaxonomy.ToolTag.midjourney.rawValue)
+        XCTAssertEqual(imageClassification.task, PromptTaxonomy.TaskTag.imageGeneration.rawValue)
+        XCTAssertGreaterThan(imageClassification.confidence, 0.85)
+    }
+
+    func testManualRecategorizationPersistsSelectedTags() throws {
+        let promptID = try repository.createPrompt(
+            text: "Summarize this roadmap update for the team.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+
+        try repository.recategorizePrompt(
+            id: promptID,
+            toolTag: .claude,
+            taskTag: .brainstorming
+        )
+
+        let prompt = try XCTUnwrap(repository.prompt(id: promptID, in: persistenceController.container.viewContext))
+        XCTAssertEqual(prompt.suggestedToolTag, PromptTaxonomy.ToolTag.claude.rawValue)
+        XCTAssertEqual(prompt.suggestedTaskTag, PromptTaxonomy.TaskTag.brainstorming.rawValue)
+        XCTAssertEqual(prompt.classificationConfidence, 1, accuracy: 0.0001)
+    }
 }

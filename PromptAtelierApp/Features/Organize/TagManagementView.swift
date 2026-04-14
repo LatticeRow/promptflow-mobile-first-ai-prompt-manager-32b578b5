@@ -1,7 +1,15 @@
 import SwiftUI
 
 struct TagManagementView: View {
-    private let suggestedTags = ["ChatGPT", "Claude", "Coding", "Writing", "Research"]
+    private var suggestedTags: [String] {
+        [
+            PromptTaxonomy.ToolTag.chatGPT.rawValue,
+            PromptTaxonomy.ToolTag.claude.rawValue,
+            PromptTaxonomy.ToolTag.codingAI.rawValue,
+            PromptTaxonomy.TaskTag.writing.rawValue,
+            PromptTaxonomy.TaskTag.research.rawValue,
+        ]
+    }
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {

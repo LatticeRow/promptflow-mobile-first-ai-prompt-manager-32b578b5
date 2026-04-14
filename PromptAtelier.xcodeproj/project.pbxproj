@@ -34,6 +34,7 @@
 		A1011A /* PromptAtelierWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A20E03 /* PromptAtelierWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A1011B /* FolderRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20802 /* FolderRecord+Extensions.swift */; };
 		A1011C /* TagRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20803 /* TagRecord+Extensions.swift */; };
+		A1011D /* PromptTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20804 /* PromptTaxonomy.swift */; };
 
 		A10201 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20B01 /* ShareViewController.swift */; };
 		A10202 /* ShareItemExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20B02 /* ShareItemExtractor.swift */; };
@@ -48,6 +49,7 @@
 		A1020B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A02 /* Logger.swift */; };
 		A1020D /* FolderRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20802 /* FolderRecord+Extensions.swift */; };
 		A1020E /* TagRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20803 /* TagRecord+Extensions.swift */; };
+		A1020F /* PromptTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20804 /* PromptTaxonomy.swift */; };
 
 		A10301 /* PromptAtelierWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C01 /* PromptAtelierWidget.swift */; };
 		A10302 /* PromptWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20C02 /* PromptWidgetProvider.swift */; };
@@ -64,6 +66,7 @@
 		A1030E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20601 /* Assets.xcassets */; };
 		A1030F /* FolderRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20802 /* FolderRecord+Extensions.swift */; };
 		A10310 /* TagRecord+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20803 /* TagRecord+Extensions.swift */; };
+		A10311 /* PromptTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20804 /* PromptTaxonomy.swift */; };
 		A10402 /* PromptRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20F03 /* PromptRepositoryTests.swift */; };
 		A10403 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20701 /* PersistenceController.swift */; };
 		A10404 /* PromptRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20703 /* PromptRepository.swift */; };
@@ -75,6 +78,7 @@
 		A1040A /* SourceInferenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20903 /* SourceInferenceService.swift */; };
 		A1040B /* AppGroupPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A01 /* AppGroupPaths.swift */; };
 		A1040C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A02 /* Logger.swift */; };
+		A1040D /* PromptTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20804 /* PromptTaxonomy.swift */; };
 		A10401 /* PromptAtelierUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20F01 /* PromptAtelierUITests.swift */; };
 /* End PBXBuildFile section */
 
@@ -669,6 +673,7 @@
 				A10115 /* Logger.swift in Sources */,
 				A1011B /* FolderRecord+Extensions.swift in Sources */,
 				A1011C /* TagRecord+Extensions.swift in Sources */,
+				A1011D /* PromptTaxonomy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +694,7 @@
 				A1020B /* Logger.swift in Sources */,
 				A1020D /* FolderRecord+Extensions.swift in Sources */,
 				A1020E /* TagRecord+Extensions.swift in Sources */,
+				A1020F /* PromptTaxonomy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -710,6 +716,7 @@
 				A1030C /* Logger.swift in Sources */,
 				A1030F /* FolderRecord+Extensions.swift in Sources */,
 				A10310 /* TagRecord+Extensions.swift in Sources */,
+				A10311 /* PromptTaxonomy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,6 +733,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10402 /* PromptRepositoryTests.swift in Sources */,
+				A1040D /* PromptTaxonomy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

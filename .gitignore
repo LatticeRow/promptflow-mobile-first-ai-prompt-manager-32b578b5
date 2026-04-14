@@ -3,6 +3,9 @@
 
 # Xcode user data
 *.xcuserstate
+*.mode1v3
+*.mode2v3
+*.perspectivev3
 xcuserdata/
 *.xccheckout
 *.xcscmblueprint
@@ -11,6 +14,10 @@ xcuserdata/
 build/
 DerivedData/
 *.xcresult
+*.xctestrun
+*.dSYM
+*.ipa
+*.orig
 
 # Swift Package Manager
 .build/

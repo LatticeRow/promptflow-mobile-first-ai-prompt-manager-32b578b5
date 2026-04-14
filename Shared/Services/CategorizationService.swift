@@ -2,48 +2,145 @@ import Foundation
 import NaturalLanguage
 
 struct CategorizationService {
-    func classify(_ capture: CaptureNormalizer.NormalizedCapture) -> (tool: String, task: String, confidence: Double) {
-        let tool = SourceInferenceService().inferTool(from: capture)
-        let body = [capture.title, capture.body].joined(separator: " ").lowercased()
-
-        let keywordMap: [(String, String, Double)] = [
-            ("summarize", "Summarization", 0.92),
-            ("summary", "Summarization", 0.9),
-            ("refactor", "Coding", 0.94),
-            ("bug", "Coding", 0.86),
-            ("logo", "Image generation", 0.84),
-            ("image", "Image generation", 0.8),
-            ("research", "Research", 0.82),
-            ("brainstorm", "Brainstorming", 0.8),
-            ("write", "Writing", 0.78)
-        ]
-
-        if let match = keywordMap.first(where: { body.contains($0.0) }) {
-            return (tool, match.1, match.2)
-        }
-
-        let recognizer = NLTagger(tagSchemes: [.lexicalClass])
-        recognizer.string = body
-        let options: NLTagger.Options = [.omitWhitespace, .omitPunctuation]
-        var counts: [String: Int] = [:]
-
-        recognizer.enumerateTags(in: body.startIndex..<body.endIndex, unit: .word, scheme: .lexicalClass, options: options) { tag, tokenRange in
-            if tag == .noun || tag == .verb {
-                let token = String(body[tokenRange])
-                counts[token, default: 0] += 1
-            }
-            return true
-        }
-
+    struct Classification {
+        let tool: String
         let task: String
-        if counts.keys.contains(where: { ["code", "build", "debug"].contains($0) }) {
-            task = "Coding"
-        } else if counts.keys.contains(where: { ["plan", "outline", "story"].contains($0) }) {
-            task = "Writing"
-        } else {
-            task = "Research"
+        let confidence: Double
+    }
+
+    private let sourceInferenceService = SourceInferenceService()
+
+    func classify(_ capture: CaptureNormalizer.NormalizedCapture, sourceAppBundleID: String?) -> Classification {
+        let inferredSource = sourceInferenceService.inferSource(from: capture, sourceAppBundleID: sourceAppBundleID)
+        let evidence = ClassificationEvidence(capture: capture, sourceAppBundleID: sourceAppBundleID)
+        let scoredTasks = taskScores(from: evidence, inferredTool: inferredSource.tool)
+            .sorted { lhs, rhs in
+                if lhs.value == rhs.value {
+                    return lhs.key.rawValue < rhs.key.rawValue
+                }
+
+                return lhs.value > rhs.value
+            }
+
+        let bestTask = scoredTasks.first?.key ?? .writing
+        let bestTaskScore = scoredTasks.first?.value ?? 0
+        let runnerUpScore = scoredTasks.dropFirst().first?.value ?? 0
+        let confidence = confidence(toolConfidence: inferredSource.confidence, bestTaskScore: bestTaskScore, runnerUpScore: runnerUpScore)
+
+        return Classification(
+            tool: inferredSource.tool.rawValue,
+            task: bestTask.rawValue,
+            confidence: confidence
+        )
+    }
+
+    private func taskScores(
+        from evidence: ClassificationEvidence,
+        inferredTool: PromptTaxonomy.ToolTag
+    ) -> [PromptTaxonomy.TaskTag: Double] {
+        var scores = Dictionary(uniqueKeysWithValues: PromptTaxonomy.TaskTag.allCases.map { ($0, 0.0) })
+
+        for task in PromptTaxonomy.TaskTag.allCases {
+            for rule in task.phraseRules where evidence.haystack.contains(rule.pattern) {
+                scores[task, default: 0] += rule.weight
+            }
+
+            for term in evidence.lexicalTerms {
+                if let weight = task.tokenWeights[term] {
+                    scores[task, default: 0] += weight
+                }
+            }
         }
 
-        return (tool, task, 0.55)
+        if evidence.urlPath.contains("/imagine") || evidence.urlPath.contains("image") || evidence.urlPath.contains("gallery") {
+            scores[.imageGeneration, default: 0] += 1.6
+        }
+
+        if evidence.urlPath.contains("research") || evidence.urlPath.contains("discover") {
+            scores[.research, default: 0] += 1.2
+        }
+
+        if evidence.urlPath.contains("summary") || evidence.urlPath.contains("summarize") {
+            scores[.summarization, default: 0] += 1.3
+        }
+
+        switch inferredTool {
+        case .midjourney:
+            scores[.imageGeneration, default: 0] += 2.2
+        case .codingAI:
+            scores[.coding, default: 0] += 2.0
+        case .chatGPT, .claude, .genericAI:
+            break
+        }
+
+        if scores.values.allSatisfy({ $0 == 0 }) {
+            scores[defaultTask(for: evidence), default: 0] = 0.6
+        }
+
+        return scores
+    }
+
+    private func defaultTask(for evidence: ClassificationEvidence) -> PromptTaxonomy.TaskTag {
+        if evidence.haystack.contains("idea") || evidence.haystack.contains("brainstorm") {
+            return .brainstorming
+        }
+
+        if evidence.haystack.contains("research") || evidence.haystack.contains("compare") {
+            return .research
+        }
+
+        return .writing
+    }
+
+    private func confidence(toolConfidence: Double, bestTaskScore: Double, runnerUpScore: Double) -> Double {
+        let taskSignal = min(bestTaskScore * 0.09, 0.36)
+        let marginSignal = min(max(bestTaskScore - runnerUpScore, 0) * 0.08, 0.18)
+        let confidence = 0.34 + (toolConfidence * 0.34) + taskSignal + marginSignal
+        return min(max(confidence, 0.42), 0.98)
+    }
+
+    private struct ClassificationEvidence {
+        let haystack: String
+        let urlPath: String
+        let lexicalTerms: [String]
+
+        init(capture: CaptureNormalizer.NormalizedCapture, sourceAppBundleID: String?) {
+            let sourceURL = capture.sourceURLString ?? ""
+            haystack = [capture.title, capture.body, sourceURL, sourceAppBundleID ?? ""]
+                .joined(separator: " ")
+                .lowercased()
+
+            if let sourceURLString = capture.sourceURLString,
+               let components = URLComponents(string: sourceURLString) {
+                urlPath = [components.host ?? "", components.path].joined(separator: "/").lowercased()
+            } else {
+                urlPath = ""
+            }
+
+            lexicalTerms = Self.extractLexicalTerms(from: haystack)
+        }
+
+        private static func extractLexicalTerms(from text: String) -> [String] {
+            let tagger = NLTagger(tagSchemes: [.lemma])
+            tagger.string = text
+
+            let options: NLTagger.Options = [.omitWhitespace, .omitPunctuation, .omitOther, .joinNames]
+            var terms: [String] = []
+
+            tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .lemma, options: options) { tag, tokenRange in
+                let surface = String(text[tokenRange]).lowercased()
+                if surface.count >= 3 {
+                    terms.append(surface)
+                }
+
+                if let lemma = tag?.rawValue.lowercased(), lemma.count >= 3, lemma != surface {
+                    terms.append(lemma)
+                }
+
+                return true
+            }
+
+            return terms
+        }
     }
 }
