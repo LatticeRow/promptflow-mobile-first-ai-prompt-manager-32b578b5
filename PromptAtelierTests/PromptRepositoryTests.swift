@@ -232,4 +232,37 @@ final class PromptRepositoryTests: XCTestCase {
         XCTAssertEqual(prompt.folder?.idValue, folderID)
         XCTAssertEqual(prompt.sortedTags.map(\.idValue), [customTagID])
     }
+
+    func testRecentStatusMatchesRecentAndStalePrompts() throws {
+        let now = Date(timeIntervalSinceReferenceDate: 500_000)
+        let recentPromptID = try repository.createPrompt(
+            text: "Draft a new home screen prompt.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+        let stalePromptID = try repository.createPrompt(
+            text: "Summarize the archive notes.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+
+        let context = persistenceController.container.viewContext
+        let recentPrompt = try XCTUnwrap(repository.prompt(id: recentPromptID, in: context))
+        let stalePrompt = try XCTUnwrap(repository.prompt(id: stalePromptID, in: context))
+
+        recentPrompt.createdAt = Calendar.current.date(byAdding: .day, value: -1, to: now)
+        recentPrompt.lastCopiedAt = Calendar.current.date(byAdding: .day, value: -1, to: now)
+        stalePrompt.createdAt = Calendar.current.date(byAdding: .day, value: -10, to: now)
+        stalePrompt.lastCopiedAt = Calendar.current.date(byAdding: .day, value: -10, to: now)
+        try context.save()
+
+        XCTAssertTrue(LibraryRecentStatus.allTime.matches(recentPrompt, now: now))
+        XCTAssertTrue(LibraryRecentStatus.allTime.matches(stalePrompt, now: now))
+        XCTAssertTrue(LibraryRecentStatus.addedRecently.matches(recentPrompt, now: now))
+        XCTAssertFalse(LibraryRecentStatus.addedRecently.matches(stalePrompt, now: now))
+        XCTAssertTrue(LibraryRecentStatus.copiedRecently.matches(recentPrompt, now: now))
+        XCTAssertFalse(LibraryRecentStatus.copiedRecently.matches(stalePrompt, now: now))
+    }
 }

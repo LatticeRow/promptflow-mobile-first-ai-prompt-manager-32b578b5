@@ -44,6 +44,7 @@ struct FolderListView: View {
     ) private var folders: FetchedResults<FolderRecord>
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \TagRecord.name, ascending: true)],
+        predicate: NSPredicate(format: "kind == %@", "custom"),
         animation: .default
     ) private var customTags: FetchedResults<TagRecord>
     @State private var newFolderName = ""
@@ -56,7 +57,7 @@ struct FolderListView: View {
             VStack(alignment: .leading, spacing: 20) {
                 adminCard(
                     title: "Folders",
-                    subtitle: "Place prompts where you expect them.",
+                    subtitle: "Create places for your prompts.",
                     textFieldTitle: "New folder",
                     text: $newFolderName,
                     addIdentifier: "organize.screen.addFolder",
@@ -81,7 +82,7 @@ struct FolderListView: View {
 
                 adminCard(
                     title: "Custom tags",
-                    subtitle: "Keep your own shorthand close.",
+                    subtitle: "Add your own labels.",
                     textFieldTitle: "New custom tag",
                     text: $newTagName,
                     addIdentifier: "organize.screen.addTag",

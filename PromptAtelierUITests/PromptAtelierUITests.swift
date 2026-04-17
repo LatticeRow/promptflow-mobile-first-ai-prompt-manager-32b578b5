@@ -138,6 +138,20 @@ final class PromptAtelierUITests: XCTestCase {
         tagFilter.tap()
         XCTAssertTrue(app.buttons["All tags"].waitForExistence(timeout: 5))
         app.buttons["All tags"].tap()
+
+        let recentFilter = app.buttons["library.filter.recent"]
+        XCTAssertTrue(recentFilter.waitForExistence(timeout: 5))
+        recentFilter.tap()
+        XCTAssertTrue(app.buttons["Added recently"].waitForExistence(timeout: 5))
+        app.buttons["Added recently"].tap()
+
+        recentFilter.tap()
+        XCTAssertTrue(app.buttons["Copied recently"].waitForExistence(timeout: 5))
+        app.buttons["Copied recently"].tap()
+
+        recentFilter.tap()
+        XCTAssertTrue(app.buttons["All time"].waitForExistence(timeout: 5))
+        app.buttons["All time"].tap()
     }
 
     @MainActor

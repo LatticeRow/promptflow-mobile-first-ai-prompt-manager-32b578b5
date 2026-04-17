@@ -15,11 +15,13 @@ struct LibraryView: View {
     ) private var folders: FetchedResults<FolderRecord>
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \TagRecord.name, ascending: true)],
+        predicate: NSPredicate(format: "kind == %@", "custom"),
         animation: .default
     ) private var customTags: FetchedResults<TagRecord>
     @State private var searchText = ""
     @State private var selectedFolderID: UUID?
     @State private var selectedTagID: UUID?
+    @State private var selectedRecentStatus: LibraryRecentStatus = .allTime
     @State private var showPinnedOnly = false
     @State private var showFavoritesOnly = false
 
@@ -33,8 +35,9 @@ struct LibraryView: View {
             let matchesFavorites = !showFavoritesOnly || prompt.isFavorite
             let matchesFolder = selectedFolderID == nil || prompt.folder?.idValue == selectedFolderID
             let matchesTag = selectedTagID == nil || prompt.sortedTags.contains(where: { $0.idValue == selectedTagID })
+            let matchesRecentStatus = selectedRecentStatus.matches(prompt)
 
-            return matchesSearch && matchesPinned && matchesFavorites && matchesFolder && matchesTag
+            return matchesSearch && matchesPinned && matchesFavorites && matchesFolder && matchesTag && matchesRecentStatus
         }
     }
 
@@ -63,6 +66,7 @@ struct LibraryView: View {
                     tags: Array(customTags),
                     selectedFolderID: $selectedFolderID,
                     selectedTagID: $selectedTagID,
+                    selectedRecentStatus: $selectedRecentStatus,
                     showPinnedOnly: $showPinnedOnly,
                     showFavoritesOnly: $showFavoritesOnly
                 )
@@ -142,7 +146,7 @@ struct LibraryView: View {
             Text("No prompts yet")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.white)
-            Text("Share text or a link into Prompt Atelier.")
+            Text(emptyStateMessage)
                 .font(.callout)
                 .foregroundStyle(.white.opacity(0.72))
         }
@@ -152,6 +156,14 @@ struct LibraryView: View {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(Color.white.opacity(0.05))
         )
+    }
+
+    private var emptyStateMessage: String {
+        if selectedFolderID != nil || selectedTagID != nil || selectedRecentStatus != .allTime || showPinnedOnly || showFavoritesOnly || !searchText.isEmpty {
+            return "Try a different filter."
+        }
+
+        return "Share text or a link into Prompt Atelier."
     }
 
     private func recentPromptSort(lhs: PromptRecord, rhs: PromptRecord) -> Bool {

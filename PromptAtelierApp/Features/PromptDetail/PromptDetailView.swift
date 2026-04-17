@@ -107,12 +107,12 @@ struct PromptDetailView: View {
     private func metadataCard(for prompt: PromptRecord) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Details")
+                Text("Prompt info")
                     .font(.headline)
 
                 Spacer()
 
-                Button("Manage") {
+                Button("Edit") {
                     showingOrganizerSheet = true
                 }
                 .font(.subheadline.weight(.semibold))
@@ -130,7 +130,7 @@ struct PromptDetailView: View {
             LabeledContent("Copied", value: copySummary(for: prompt))
 
             VStack(alignment: .leading, spacing: 10) {
-                Text("Custom tags")
+                Text("Tags")
                     .font(.subheadline.weight(.semibold))
 
                 if prompt.sortedTags.isEmpty {
@@ -277,13 +277,13 @@ private struct PromptOrganizerSheet: View {
                             .font(.headline)
                             .foregroundStyle(.white)
                             .lineLimit(2)
-                        Text("Choose the details you want.")
+                        Text("Set the folder and tags.")
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.68))
                     }
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("AI Tool")
+                        Text("Tool")
                             .font(.headline)
                             .foregroundStyle(.white)
                         FlowChipSection(
@@ -346,12 +346,12 @@ private struct PromptOrganizerSheet: View {
                     }
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Custom tags")
+                        Text("Tags")
                             .font(.headline)
                             .foregroundStyle(.white)
 
                         if availableTags.isEmpty {
-                            Text("No custom tags")
+                            Text("No tags yet")
                                 .font(.subheadline)
                                 .foregroundStyle(.white.opacity(0.65))
                         } else {
@@ -415,7 +415,7 @@ private struct PromptOrganizerSheet: View {
                 )
                 .ignoresSafeArea()
             )
-            .navigationTitle("Manage")
+            .navigationTitle("Edit")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: reloadOptions)
             .toolbar {

@@ -68,3 +68,41 @@ extension PromptRecord {
         }
     }
 }
+
+enum LibraryRecentStatus: String, CaseIterable, Identifiable {
+    case allTime = "All time"
+    case addedRecently = "Added recently"
+    case copiedRecently = "Copied recently"
+
+    var id: String { rawValue }
+
+    var accessibilityIdentifier: String {
+        switch self {
+        case .allTime:
+            return "all_time"
+        case .addedRecently:
+            return "added_recently"
+        case .copiedRecently:
+            return "copied_recently"
+        }
+    }
+
+    func matches(_ prompt: PromptRecord, now: Date = .now, calendar: Calendar = .current) -> Bool {
+        switch self {
+        case .allTime:
+            return true
+        case .addedRecently:
+            guard let cutoff = calendar.date(byAdding: .day, value: -7, to: now),
+                  let createdAt = prompt.createdAt else {
+                return false
+            }
+            return createdAt >= cutoff
+        case .copiedRecently:
+            guard let cutoff = calendar.date(byAdding: .day, value: -7, to: now),
+                  let lastCopiedAt = prompt.lastCopiedAt else {
+                return false
+            }
+            return lastCopiedAt >= cutoff
+        }
+    }
+}

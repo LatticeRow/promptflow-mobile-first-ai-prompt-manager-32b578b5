@@ -5,6 +5,7 @@ struct LibraryFilterBar: View {
     let tags: [TagRecord]
     @Binding var selectedFolderID: UUID?
     @Binding var selectedTagID: UUID?
+    @Binding var selectedRecentStatus: LibraryRecentStatus
     @Binding var showPinnedOnly: Bool
     @Binding var showFavoritesOnly: Bool
 
@@ -14,9 +15,10 @@ struct LibraryFilterBar: View {
                 menuChip(
                     title: selectedFolderTitle,
                     systemImage: "folder.fill",
+                    isActive: selectedFolderID != nil,
                     accessibilityIdentifier: "library.filter.folder"
                 ) {
-                    Button("All folders") {
+                    selectionButton("All folders", isSelected: selectedFolderID == nil) {
                         selectedFolderID = nil
                     }
 
@@ -25,7 +27,7 @@ struct LibraryFilterBar: View {
                     }
 
                     ForEach(folders, id: \.idValue) { folder in
-                        Button(folder.displayName) {
+                        selectionButton(folder.displayName, isSelected: selectedFolderID == folder.idValue) {
                             selectedFolderID = folder.idValue
                         }
                     }
@@ -34,9 +36,10 @@ struct LibraryFilterBar: View {
                 menuChip(
                     title: selectedTagTitle,
                     systemImage: "tag.fill",
+                    isActive: selectedTagID != nil,
                     accessibilityIdentifier: "library.filter.tag"
                 ) {
-                    Button("All tags") {
+                    selectionButton("All tags", isSelected: selectedTagID == nil) {
                         selectedTagID = nil
                     }
 
@@ -45,8 +48,21 @@ struct LibraryFilterBar: View {
                     }
 
                     ForEach(tags, id: \.idValue) { tag in
-                        Button(tag.displayName) {
+                        selectionButton(tag.displayName, isSelected: selectedTagID == tag.idValue) {
                             selectedTagID = tag.idValue
+                        }
+                    }
+                }
+
+                menuChip(
+                    title: selectedRecentStatus.rawValue,
+                    systemImage: "clock.fill",
+                    isActive: selectedRecentStatus != .allTime,
+                    accessibilityIdentifier: "library.filter.recent"
+                ) {
+                    ForEach(LibraryRecentStatus.allCases) { status in
+                        selectionButton(status.rawValue, isSelected: selectedRecentStatus == status) {
+                            selectedRecentStatus = status
                         }
                     }
                 }
@@ -81,6 +97,16 @@ struct LibraryFilterBar: View {
         tags.first(where: { $0.idValue == selectedTagID })?.displayName ?? "All tags"
     }
 
+    private func selectionButton(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            if isSelected {
+                Label(title, systemImage: "checkmark")
+            } else {
+                Text(title)
+            }
+        }
+    }
+
     private func filterButton(
         title: String,
         systemImage: String,
@@ -106,6 +132,7 @@ struct LibraryFilterBar: View {
     private func menuChip<Content: View>(
         title: String,
         systemImage: String,
+        isActive: Bool,
         accessibilityIdentifier: String,
         @ViewBuilder content: () -> Content
     ) -> some View {
@@ -117,10 +144,10 @@ struct LibraryFilterBar: View {
                 .padding(.vertical, 8)
                 .background(
                     Capsule()
-                        .fill(Color.white.opacity(0.06))
+                        .fill(isActive ? Color("AccentColor").opacity(0.2) : Color.white.opacity(0.06))
                 )
         }
-        .foregroundStyle(.white.opacity(0.86))
+        .foregroundStyle(isActive ? Color("AccentColor") : .white.opacity(0.86))
         .accessibilityIdentifier(accessibilityIdentifier)
     }
 }
