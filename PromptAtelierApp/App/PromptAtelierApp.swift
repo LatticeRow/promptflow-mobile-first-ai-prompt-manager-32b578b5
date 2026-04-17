@@ -14,6 +14,8 @@ struct PromptAtelierApp: App {
                 .preferredColorScheme(.dark)
                 .tint(Color("AccentColor"))
                 .task {
+                    seedLaunchDataIfNeeded()
+
                     if ProcessInfo.processInfo.arguments.contains("-promptatelier-seed-sample") {
                         appContainer.repository.seedSamplePromptsIfNeeded()
                     }
@@ -35,6 +37,18 @@ struct PromptAtelierApp: App {
 
                     appContainer.handleForegroundActivation()
                 }
+        }
+    }
+
+    private func seedLaunchDataIfNeeded() {
+        let arguments = ProcessInfo.processInfo.arguments
+
+        if arguments.contains("-promptatelier-seed-browse-flow") {
+            appContainer.repository.seedScenarioForUITests(.browseFlow)
+        }
+
+        if arguments.contains("-promptatelier-seed-copy-flow") {
+            appContainer.repository.seedScenarioForUITests(.copyFlow)
         }
     }
 }

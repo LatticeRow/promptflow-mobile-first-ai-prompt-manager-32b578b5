@@ -131,6 +131,38 @@ final class PromptRepositoryTests: XCTestCase {
         XCTAssertEqual(normalized.sourceHost, "chatgpt.com")
     }
 
+    func testNormalizerFallsBackToHostWhenOnlyURLIsAvailable() throws {
+        let url = try XCTUnwrap(URL(string: "https://www.perplexity.ai/search/market-trends"))
+        let normalized = try XCTUnwrap(
+            CaptureNormalizer().normalize(
+                text: nil,
+                url: url,
+                metadataTitle: "   ",
+                metadataText: nil
+            )
+        )
+
+        XCTAssertEqual(normalized.title, "Perplexity")
+        XCTAssertEqual(normalized.body, "https://www.perplexity.ai/search/market-trends")
+        XCTAssertEqual(normalized.sourceType, "url")
+        XCTAssertEqual(normalized.sourceHost, "perplexity.ai")
+    }
+
+    func testCreatePromptRejectsEmptyCapturePayload() {
+        XCTAssertThrowsError(
+            try repository.createPrompt(
+                text: "   ",
+                url: nil,
+                metadataTitle: nil,
+                metadataText: "\n\n",
+                sourceAppBundleID: nil,
+                captureMethod: "unit_test"
+            )
+        ) { error in
+            XCTAssertEqual(error as? PromptRepositoryError, .invalidCapture)
+        }
+    }
+
     func testDeferredEnrichmentClassifiesSharedCaptureOnForegroundPath() throws {
         let promptID = try repository.createPrompt(
             text: "Research a better system prompt structure for release planning.",
@@ -182,6 +214,21 @@ final class PromptRepositoryTests: XCTestCase {
         XCTAssertGreaterThan(imageClassification.confidence, 0.85)
     }
 
+    func testCategorizerFallsBackToGenericWritingWhenSignalsAreWeak() throws {
+        let service = CategorizationService()
+        let capture = try XCTUnwrap(
+            CaptureNormalizer().normalize(
+                text: "Polish this note so it sounds more direct.",
+                url: nil
+            )
+        )
+
+        let classification = service.classify(capture, sourceAppBundleID: nil)
+        XCTAssertEqual(classification.tool, PromptTaxonomy.ToolTag.genericAI.rawValue)
+        XCTAssertEqual(classification.task, PromptTaxonomy.TaskTag.writing.rawValue)
+        XCTAssertGreaterThanOrEqual(classification.confidence, 0.42)
+    }
+
     func testManualRecategorizationPersistsSelectedTags() throws {
         let promptID = try repository.createPrompt(
             text: "Summarize this roadmap update for the team.",
@@ -231,6 +278,34 @@ final class PromptRepositoryTests: XCTestCase {
         let prompt = try XCTUnwrap(repository.prompt(id: newerPromptID, in: persistenceController.container.viewContext))
         XCTAssertEqual(prompt.folder?.idValue, folderID)
         XCTAssertEqual(prompt.sortedTags.map(\.idValue), [customTagID])
+    }
+
+    func testPromptFilteringSupportsSourceTypeAndCopiedSince() throws {
+        let recentPromptID = try repository.createPrompt(
+            text: "Summarize this release update.",
+            url: URL(string: "https://chatgpt.com/share/release"),
+            metadataTitle: "Release summary",
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+        let olderPromptID = try repository.createPrompt(
+            text: "Draft a launch plan.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+
+        _ = repository.markPromptCopied(id: olderPromptID, copiedAt: Date(timeIntervalSinceReferenceDate: 50))
+        _ = repository.markPromptCopied(id: recentPromptID, copiedAt: Date(timeIntervalSinceReferenceDate: 250))
+
+        var filter = PromptFilter()
+        filter.sourceType = "url"
+        XCTAssertEqual(repository.prompts(matching: filter).map(\.idValue), [recentPromptID])
+
+        filter = PromptFilter()
+        filter.copiedSince = Date(timeIntervalSinceReferenceDate: 200)
+        filter.sortOrder = .lastCopiedAtDescending
+        XCTAssertEqual(repository.recentlyCopiedPrompts(limit: 5, since: filter.copiedSince).map(\.idValue), [recentPromptID])
     }
 
     func testWidgetSourcePromptsPreferPinnedThenRecentThenLatest() throws {

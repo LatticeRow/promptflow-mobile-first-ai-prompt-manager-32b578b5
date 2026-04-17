@@ -25,7 +25,7 @@ struct PromptCopyMetadata {
     let lastCopiedAt: Date?
 }
 
-enum PromptRepositoryError: LocalizedError {
+enum PromptRepositoryError: LocalizedError, Equatable {
     case invalidCapture
     case missingPrompt(UUID)
     case missingFolder(UUID)
@@ -55,6 +55,11 @@ enum PromptRepositoryError: LocalizedError {
 }
 
 final class PromptRepository {
+    enum UITestSeedScenario: String {
+        case browseFlow
+        case copyFlow
+    }
+
     private let container: NSPersistentCloudKitContainer
     private let normalizer = CaptureNormalizer()
     private let categorizer = CategorizationService()
@@ -96,6 +101,15 @@ final class PromptRepository {
             prompt.captureMethod = "ui_test"
             prompt.updatedAt = .now
             return ()
+        }
+    }
+
+    func seedScenarioForUITests(_ scenario: UITestSeedScenario) {
+        switch scenario {
+        case .browseFlow:
+            seedBrowseFlowScenario()
+        case .copyFlow:
+            seedCopyFlowScenario()
         }
     }
 
@@ -639,5 +653,55 @@ final class PromptRepository {
         }
 
         return try result.get()
+    }
+
+    private func seedBrowseFlowScenario() {
+        let clientFolderID = try? createFolder(name: "Clients", sortOrder: 0)
+        let launchTagID = try? createTag(name: "Launch", kind: "custom")
+        let swiftTagID = try? createTag(name: "SwiftUI", kind: "custom")
+
+        let browsePromptID = UUID(uuidString: "A9D7E2A2-CF74-4B42-AE35-1F80A6FD10C1")!
+        let secondaryPromptID = UUID(uuidString: "C5E50609-78D0-4B8A-B730-F0A89CDEE5D1")!
+
+        seedPromptForTesting(
+            id: browsePromptID,
+            title: "Executive launch brief",
+            body: "Write a concise launch update for Prompt Atelier. Keep the tone polished and clear."
+        )
+        seedPromptForTesting(
+            id: secondaryPromptID,
+            title: "SwiftUI state refactor",
+            body: "Refactor this SwiftUI screen so loading, empty, and error states are easier to test."
+        )
+
+        if let clientFolderID {
+            try? assignPrompt(id: browsePromptID, toFolderID: clientFolderID)
+        }
+
+        var browseTagIDs: [UUID] = []
+        if let launchTagID {
+            browseTagIDs.append(launchTagID)
+        }
+        if !browseTagIDs.isEmpty {
+            try? setTags(forPromptID: browsePromptID, tagIDs: browseTagIDs)
+        }
+
+        if let swiftTagID {
+            try? setTags(forPromptID: secondaryPromptID, tagIDs: [swiftTagID])
+        }
+
+        try? recategorizePrompt(id: browsePromptID, toolTag: .chatGPT, taskTag: .writing, confidence: 1)
+        try? recategorizePrompt(id: secondaryPromptID, toolTag: .codingAI, taskTag: .coding, confidence: 1)
+        try? setPinned(id: browsePromptID, isPinned: true)
+    }
+
+    private func seedCopyFlowScenario() {
+        let promptID = UUID(uuidString: "AE3D138F-C42B-4D31-92CC-C65DDF9A654B")!
+        seedPromptForTesting(
+            id: promptID,
+            title: "Board update outline",
+            body: "Summarize the week in three bullets for the board update."
+        )
+        try? recategorizePrompt(id: promptID, toolTag: .claude, taskTag: .summarization, confidence: 1)
     }
 }

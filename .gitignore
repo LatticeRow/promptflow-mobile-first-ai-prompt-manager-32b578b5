@@ -6,9 +6,12 @@
 *.mode1v3
 *.mode2v3
 *.perspectivev3
+*.pbxuser
 xcuserdata/
+*.xcworkspace/xcuserdata/
 *.xccheckout
 *.xcscmblueprint
+.xcode.env.local
 
 # Build products
 build/
@@ -40,3 +43,4 @@ fastlane/test_output/
 # Editor settings
 .idea/
 .vscode/
+*.swp

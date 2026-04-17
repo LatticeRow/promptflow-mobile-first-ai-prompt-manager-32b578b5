@@ -5,12 +5,21 @@ import WidgetKit
 struct CopyButton: View {
     let prompt: PromptRecord
     let repository: PromptRepository
+    let onCopy: (PromptCopyMetadata) -> Void
     @State private var didCopy = false
+
+    init(prompt: PromptRecord, repository: PromptRepository, onCopy: @escaping (PromptCopyMetadata) -> Void = { _ in }) {
+        self.prompt = prompt
+        self.repository = repository
+        self.onCopy = onCopy
+    }
 
     var body: some View {
         Button {
             UIPasteboard.general.string = prompt.displayBody
-            repository.markPromptCopied(id: prompt.idValue)
+            if let metadata = repository.markPromptCopied(id: prompt.idValue) {
+                onCopy(metadata)
+            }
             WidgetCenter.shared.reloadAllTimelines()
 
             withAnimation(.easeOut(duration: 0.2)) {

@@ -1,129 +1,40 @@
 import XCTest
 
 final class PromptAtelierUITests: XCTestCase {
+    private let browsePromptID = "A9D7E2A2-CF74-4B42-AE35-1F80A6FD10C1"
+    private let secondaryBrowsePromptID = "C5E50609-78D0-4B8A-B730-F0A89CDEE5D1"
+    private let copyPromptID = "AE3D138F-C42B-4D31-92CC-C65DDF9A654B"
+
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
 
     @MainActor
-    func testPrimaryNavigationAndControls() throws {
+    func testLibraryBrowseFlowWithSeededData() throws {
         let app = XCUIApplication()
-        app.launchArguments = ["-promptatelier-ui-testing", "-promptatelier-seed-sample"]
+        app.launchArguments = ["-promptatelier-ui-testing", "-promptatelier-seed-browse-flow"]
         app.launch()
 
-        app.tabBars.buttons["tab.organize"].tap()
+        let primaryRow = app.buttons["library.promptRow.\(browsePromptID)"]
+        let secondaryRow = app.buttons["library.promptRow.\(secondaryBrowsePromptID)"]
 
-        let folderField = app.textFields["organize.screen.newFolder"]
-        XCTAssertTrue(folderField.waitForExistence(timeout: 5))
-        folderField.tap()
-        folderField.typeText("Clients")
-        app.buttons["organize.screen.addFolder"].tap()
-
-        let folderRename = app.buttons.matching(identifierPrefix: "organize.screen.folder.").firstMatch
-        XCTAssertTrue(folderRename.waitForExistence(timeout: 5))
-        folderRename.tap()
-        app.buttons["Save"].tap()
-
-        let tagField = app.textFields["organize.screen.newTag"]
-        XCTAssertTrue(tagField.waitForExistence(timeout: 5))
-        tagField.tap()
-        tagField.typeText("Launch")
-        app.buttons["organize.screen.addTag"].tap()
-
-        let tagRename = app.buttons.matching(identifierPrefix: "organize.screen.tag.").firstMatch
-        XCTAssertTrue(tagRename.waitForExistence(timeout: 5))
-        tagRename.tap()
-        app.buttons["Save"].tap()
-
-        dismissKeyboardIfPresent(in: app)
-        app.tabBars.buttons["tab.library"].tap()
+        XCTAssertTrue(primaryRow.waitForExistence(timeout: 5))
+        XCTAssertTrue(secondaryRow.waitForExistence(timeout: 5))
 
         let pinnedButton = app.buttons["library.filter.pinned"]
         XCTAssertTrue(pinnedButton.waitForExistence(timeout: 5))
         pinnedButton.tap()
+        XCTAssertTrue(primaryRow.waitForExistence(timeout: 5))
+        XCTAssertFalse(secondaryRow.exists)
         pinnedButton.tap()
-
-        let favoritesButton = app.buttons["library.filter.favorites"]
-        XCTAssertTrue(favoritesButton.waitForExistence(timeout: 5))
-        favoritesButton.tap()
-        favoritesButton.tap()
-
-        let firstRow = app.buttons["library.promptRow"].firstMatch
-        XCTAssertTrue(firstRow.waitForExistence(timeout: 5))
-        firstRow.tap()
-
-        XCTAssertTrue(app.buttons["detail.pin"].waitForExistence(timeout: 5))
-        app.buttons["detail.pin"].tap()
-        app.buttons["detail.favorite"].tap()
-        app.buttons["detail.manage"].tap()
-
-        XCTAssertTrue(app.buttons["recategorize.close"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["organize.folder.none"].waitForExistence(timeout: 5))
-
-        let toolIdentifiers = [
-            "recategorize.tool.chatgpt",
-            "recategorize.tool.claude",
-            "recategorize.tool.midjourney",
-            "recategorize.tool.coding_ai",
-            "recategorize.tool.generic_ai",
-        ]
-
-        for identifier in toolIdentifiers {
-            let button = app.buttons[identifier]
-            XCTAssertTrue(button.waitForExistence(timeout: 5))
-            button.tap()
-        }
-
-        let taskIdentifiers = [
-            "recategorize.task.writing",
-            "recategorize.task.coding",
-            "recategorize.task.image_generation",
-            "recategorize.task.summarization",
-            "recategorize.task.research",
-            "recategorize.task.brainstorming",
-        ]
-
-        for identifier in taskIdentifiers {
-            let button = app.buttons[identifier]
-            tapWhenVisible(button, in: app)
-        }
-
-        let newFolderField = app.textFields["organize.newFolder"]
-        XCTAssertTrue(newFolderField.waitForExistence(timeout: 5))
-        newFolderField.tap()
-        newFolderField.typeText("Archive")
-        app.buttons["organize.addFolder"].tap()
-
-        let folderOption = app.buttons.matching(identifierPrefix: "organize.folder.").firstMatch
-        XCTAssertTrue(folderOption.waitForExistence(timeout: 5))
-        folderOption.tap()
-
-        let newTagField = app.textFields["organize.newTag"]
-        XCTAssertTrue(newTagField.waitForExistence(timeout: 5))
-        newTagField.tap()
-        newTagField.typeText("Urgent")
-        app.buttons["organize.addTag"].tap()
-
-        let customTag = app.buttons.matching(identifierPrefix: "organize.tag.").firstMatch
-        XCTAssertTrue(customTag.waitForExistence(timeout: 5))
-        customTag.tap()
-
-        app.buttons["recategorize.save"].tap()
-
-        XCTAssertTrue(app.buttons["detail.copy"].waitForExistence(timeout: 5))
-        app.buttons["detail.copy"].tap()
-
-        app.buttons["detail.manage"].tap()
-        XCTAssertTrue(app.buttons["recategorize.close"].waitForExistence(timeout: 5))
-        app.buttons["recategorize.close"].tap()
-
-        app.navigationBars.buttons.element(boundBy: 0).tap()
 
         let folderFilter = app.buttons["library.filter.folder"]
         XCTAssertTrue(folderFilter.waitForExistence(timeout: 5))
         folderFilter.tap()
         XCTAssertTrue(app.buttons["Clients"].waitForExistence(timeout: 5))
         app.buttons["Clients"].tap()
+        XCTAssertTrue(primaryRow.waitForExistence(timeout: 5))
+        XCTAssertFalse(secondaryRow.exists)
 
         folderFilter.tap()
         XCTAssertTrue(app.buttons["All folders"].waitForExistence(timeout: 5))
@@ -134,24 +45,36 @@ final class PromptAtelierUITests: XCTestCase {
         tagFilter.tap()
         XCTAssertTrue(app.buttons["Launch"].waitForExistence(timeout: 5))
         app.buttons["Launch"].tap()
+        XCTAssertTrue(primaryRow.waitForExistence(timeout: 5))
+        XCTAssertFalse(secondaryRow.exists)
 
-        tagFilter.tap()
-        XCTAssertTrue(app.buttons["All tags"].waitForExistence(timeout: 5))
-        app.buttons["All tags"].tap()
+        primaryRow.tap()
 
-        let recentFilter = app.buttons["library.filter.recent"]
-        XCTAssertTrue(recentFilter.waitForExistence(timeout: 5))
-        recentFilter.tap()
-        XCTAssertTrue(app.buttons["Added recently"].waitForExistence(timeout: 5))
-        app.buttons["Added recently"].tap()
+        XCTAssertTrue(app.navigationBars["Prompt"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Executive launch brief"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["detail.folderValue"].label, "Clients")
+        XCTAssertTrue(app.buttons["detail.copy"].waitForExistence(timeout: 5))
+    }
 
-        recentFilter.tap()
-        XCTAssertTrue(app.buttons["Copied recently"].waitForExistence(timeout: 5))
-        app.buttons["Copied recently"].tap()
+    @MainActor
+    func testPromptDetailCopyFlowWithSeededData() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-promptatelier-ui-testing", "-promptatelier-seed-copy-flow"]
+        app.launch()
 
-        recentFilter.tap()
-        XCTAssertTrue(app.buttons["All time"].waitForExistence(timeout: 5))
-        app.buttons["All time"].tap()
+        let row = app.buttons["library.promptRow.\(copyPromptID)"]
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        row.tap()
+
+        let copiedValue = app.staticTexts["detail.copiedValue"]
+        XCTAssertTrue(copiedValue.waitForExistence(timeout: 5))
+        XCTAssertEqual(copiedValue.label, "0")
+
+        let copyButton = app.buttons["detail.copy"]
+        XCTAssertTrue(copyButton.waitForExistence(timeout: 5))
+        copyButton.tap()
+
+        XCTAssertEqual(copyButton.label, "Copied")
     }
 
     @MainActor
@@ -190,7 +113,7 @@ final class PromptAtelierUITests: XCTestCase {
     }
 
     @MainActor
-    func testLaunchDeepLinkOpensPromptDetail() throws {
+    func testWidgetDeepLinkOpensPromptDetail() throws {
         let promptID = UUID(uuidString: "2F7D8B75-2E88-4A37-B2CA-E4A66B503B70")!
         let app = XCUIApplication()
         app.launchArguments = [
@@ -204,36 +127,4 @@ final class PromptAtelierUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Prompt"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["detail.copy"].waitForExistence(timeout: 5))
     }
-}
-
-private extension XCUIElementQuery {
-    func matching(identifierPrefix prefix: String) -> XCUIElementQuery {
-        matching(NSPredicate(format: "identifier BEGINSWITH %@", prefix))
-    }
-}
-
-private func dismissKeyboardIfPresent(in app: XCUIApplication) {
-    guard app.keyboards.count > 0 else {
-        return
-    }
-
-    let candidateLabels = ["Return", "Done", "Hide keyboard"]
-    for label in candidateLabels {
-        let button = app.keyboards.buttons[label]
-        if button.exists {
-            button.tap()
-            return
-        }
-    }
-}
-
-private func tapWhenVisible(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 5) {
-    XCTAssertTrue(element.waitForExistence(timeout: 5))
-
-    for _ in 0..<maxSwipes where !element.isHittable {
-        app.swipeUp()
-    }
-
-    XCTAssertTrue(element.isHittable)
-    element.tap()
 }

@@ -62,6 +62,7 @@ struct PromptRowView: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .stroke(Color.white.opacity(0.06), lineWidth: 1)
         )
+        .accessibilityElement(children: .combine)
     }
 }
 

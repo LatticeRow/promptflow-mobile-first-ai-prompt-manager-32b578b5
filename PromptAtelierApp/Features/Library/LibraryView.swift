@@ -89,7 +89,8 @@ struct LibraryView: View {
                                     PromptRowView(prompt: prompt)
                                 }
                                 .buttonStyle(.plain)
-                                .accessibilityIdentifier("library.promptRow")
+                                .accessibilityIdentifier("library.promptRow.\(prompt.idValue.uuidString)")
+                                .accessibilityLabel(prompt.displayTitle)
                             }
                         }
                     }
@@ -134,7 +135,8 @@ struct LibraryView: View {
                             RecentPromptCard(prompt: prompt)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityIdentifier("library.recentRow")
+                        .accessibilityIdentifier("library.recentRow.\(prompt.idValue.uuidString)")
+                        .accessibilityLabel(prompt.displayTitle)
                     }
                 }
             }
@@ -146,9 +148,11 @@ struct LibraryView: View {
             Text("No prompts yet")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.white)
+                .accessibilityIdentifier("library.emptyState.title")
             Text(emptyStateMessage)
                 .font(.callout)
                 .foregroundStyle(.white.opacity(0.72))
+                .accessibilityIdentifier("library.emptyState.message")
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -156,14 +160,15 @@ struct LibraryView: View {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(Color.white.opacity(0.05))
         )
+        .accessibilityIdentifier("library.emptyState")
     }
 
     private var emptyStateMessage: String {
         if selectedFolderID != nil || selectedTagID != nil || selectedRecentStatus != .allTime || showPinnedOnly || showFavoritesOnly || !searchText.isEmpty {
-            return "Try a different filter."
+            return "Try another filter."
         }
 
-        return "Share text or a link into Prompt Atelier."
+        return "Share text or links into Prompt Atelier."
     }
 
     private func recentPromptSort(lhs: PromptRecord, rhs: PromptRecord) -> Bool {
@@ -238,5 +243,6 @@ private struct RecentPromptCard: View {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .stroke(Color.white.opacity(0.08), lineWidth: 1)
         )
+        .accessibilityElement(children: .combine)
     }
 }

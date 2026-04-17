@@ -54,7 +54,7 @@ struct PromptDetailView: View {
                             .accessibilityIdentifier("detail.favorite")
                         }
 
-                        CopyButton(prompt: prompt, repository: appContainer.repository)
+                        CopyButton(prompt: prompt, repository: appContainer.repository, onCopy: applyCopyMetadata)
                     }
                     .padding(20)
                 }
@@ -127,9 +127,9 @@ struct PromptDetailView: View {
                 DetailTagChip(title: prompt.suggestedTaskTag ?? PromptTaxonomy.TaskTag.writing.rawValue)
             }
 
-            LabeledContent("Folder", value: prompt.folder?.displayName ?? "None")
-            LabeledContent("Source", value: sourceLabel(for: prompt))
-            LabeledContent("Copied", value: copySummary(for: prompt))
+            metadataRow(title: "Folder", value: prompt.folder?.displayName ?? "None", identifier: "detail.folderValue")
+            metadataRow(title: "Source", value: sourceLabel(for: prompt), identifier: "detail.sourceValue")
+            metadataRow(title: "Copied", value: copySummary(for: prompt), identifier: "detail.copiedValue")
 
             VStack(alignment: .leading, spacing: 10) {
                 Text("Tags")
@@ -158,7 +158,26 @@ struct PromptDetailView: View {
     }
 
     private func reloadPrompt() {
+        viewContext.refreshAllObjects()
         prompt = appContainer.repository.prompt(id: promptID, in: viewContext)
+    }
+
+    private func applyCopyMetadata(_ metadata: PromptCopyMetadata) {
+        prompt?.copyCount = metadata.copyCount
+        prompt?.lastCopiedAt = metadata.lastCopiedAt
+        prompt?.updatedAt = metadata.lastCopiedAt ?? .now
+        reloadPrompt()
+    }
+
+    private func metadataRow(title: String, value: String, identifier: String) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title)
+            Spacer(minLength: 12)
+            Text(value)
+                .multilineTextAlignment(.trailing)
+                .foregroundStyle(.white.opacity(0.78))
+                .accessibilityIdentifier(identifier)
+        }
     }
 
     private func saveChanges(
