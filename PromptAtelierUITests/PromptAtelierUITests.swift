@@ -188,6 +188,22 @@ final class PromptAtelierUITests: XCTestCase {
         XCTAssertTrue(signedOutApp.staticTexts["Sync is off"].waitForExistence(timeout: 5))
         XCTAssertTrue(signedOutApp.staticTexts["Your prompts stay on this iPhone until iCloud is turned on."].waitForExistence(timeout: 5))
     }
+
+    @MainActor
+    func testLaunchDeepLinkOpensPromptDetail() throws {
+        let promptID = UUID(uuidString: "2F7D8B75-2E88-4A37-B2CA-E4A66B503B70")!
+        let app = XCUIApplication()
+        app.launchArguments = [
+            "-promptatelier-ui-testing",
+            "-promptatelier-seed-sample",
+            "-promptatelier-open-url",
+            "promptatelier://prompt/\(promptID.uuidString)",
+        ]
+        app.launch()
+
+        XCTAssertTrue(app.navigationBars["Prompt"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["detail.copy"].waitForExistence(timeout: 5))
+    }
 }
 
 private extension XCUIElementQuery {

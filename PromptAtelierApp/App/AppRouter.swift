@@ -2,6 +2,7 @@ import Foundation
 
 final class AppRouter: ObservableObject {
     enum Route: Hashable {
+        case library
         case prompt(UUID)
     }
 
@@ -20,6 +21,11 @@ final class AppRouter: ObservableObject {
         }
 
         selectedTab = .library
-        path = [route]
+        switch route {
+        case .library:
+            path = []
+        case .prompt:
+            path = [route]
+        }
     }
 }

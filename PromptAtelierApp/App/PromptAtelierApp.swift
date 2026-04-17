@@ -18,6 +18,11 @@ struct PromptAtelierApp: App {
                         appContainer.repository.seedSamplePromptsIfNeeded()
                     }
 
+                    if let deepLink = launchDeepLinkURL() {
+                        seedLaunchTestPromptIfNeeded(for: deepLink, repository: appContainer.repository)
+                        appContainer.router.handle(url: deepLink)
+                    }
+
                     appContainer.handleForegroundActivation()
                 }
                 .onOpenURL { url in
@@ -34,6 +39,29 @@ struct PromptAtelierApp: App {
     }
 }
 
+private func launchDeepLinkURL() -> URL? {
+    let arguments = ProcessInfo.processInfo.arguments
+    guard let flagIndex = arguments.firstIndex(of: "-promptatelier-open-url"),
+          arguments.indices.contains(flagIndex + 1) else {
+        return nil
+    }
+
+    return URL(string: arguments[flagIndex + 1])
+}
+
+private func seedLaunchTestPromptIfNeeded(for url: URL, repository: PromptRepository) {
+    guard ProcessInfo.processInfo.arguments.contains("-promptatelier-ui-testing"),
+          case .prompt(let promptID) = DeepLinkHandler.route(for: url) else {
+        return
+    }
+
+    repository.seedPromptForTesting(
+        id: promptID,
+        title: "Deep Link Prompt",
+        body: "Open this prompt straight from a widget or URL."
+    )
+}
+
 private struct RootTabView: View {
     @EnvironmentObject private var router: AppRouter
 
@@ -43,6 +71,8 @@ private struct RootTabView: View {
                 LibraryView()
                     .navigationDestination(for: AppRouter.Route.self) { route in
                         switch route {
+                        case .library:
+                            LibraryView()
                         case .prompt(let id):
                             PromptDetailView(promptID: id)
                         }

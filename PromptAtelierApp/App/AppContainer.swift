@@ -209,7 +209,7 @@ final class SyncMonitor: ObservableObject {
             return SyncStatusSnapshot(
                 symbolName: "internaldrive.fill",
                 title: "This iPhone only",
-                message: "Prompt Atelier is saving locally in this build.",
+                message: "Your prompts are saved on this iPhone.",
                 tone: .neutral,
                 lastSyncDate: nil,
                 showsProgress: false
@@ -231,7 +231,7 @@ final class SyncMonitor: ObservableObject {
             return SyncStatusSnapshot(
                 symbolName: "icloud",
                 title: "Checking sync",
-                message: "Prompt Atelier is checking whether your prompts can sync right now.",
+                message: "Checking whether sync is available.",
                 tone: .neutral,
                 lastSyncDate: lastSyncDate,
                 showsProgress: true

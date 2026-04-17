@@ -233,6 +233,48 @@ final class PromptRepositoryTests: XCTestCase {
         XCTAssertEqual(prompt.sortedTags.map(\.idValue), [customTagID])
     }
 
+    func testWidgetSourcePromptsPreferPinnedThenRecentThenLatest() throws {
+        let latestOnlyPromptID = try repository.createPrompt(
+            text: "Polish the release note for the app update.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+        let recentPromptID = try repository.createPrompt(
+            text: "Summarize the client workshop into three bullets.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+        let pinnedPromptID = try repository.createPrompt(
+            text: "Refine the evergreen product positioning prompt.",
+            url: nil,
+            sourceAppBundleID: nil,
+            captureMethod: "unit_test"
+        )
+
+        try repository.setPinned(id: pinnedPromptID, isPinned: true)
+        _ = repository.markPromptCopied(id: recentPromptID, copiedAt: Date(timeIntervalSinceReferenceDate: 300))
+
+        let widgetPrompts = repository.widgetSourcePrompts(limit: 3)
+        XCTAssertEqual(widgetPrompts.map(\.idValue), [pinnedPromptID, recentPromptID, latestOnlyPromptID])
+    }
+
+    func testDeepLinkHandlerRoutesLibraryAndPromptLinks() throws {
+        XCTAssertEqual(
+            DeepLinkHandler.route(for: try XCTUnwrap(URL(string: "promptatelier://library"))),
+            .library
+        )
+
+        let promptID = UUID()
+        XCTAssertEqual(
+            DeepLinkHandler.route(for: try XCTUnwrap(URL(string: "promptatelier://prompt/\(promptID.uuidString)"))),
+            .prompt(promptID)
+        )
+        XCTAssertNil(DeepLinkHandler.route(for: try XCTUnwrap(URL(string: "promptatelier://prompt/not-a-uuid"))))
+        XCTAssertNil(DeepLinkHandler.route(for: try XCTUnwrap(URL(string: "https://promptatelier.app/prompt/\(promptID.uuidString)"))))
+    }
+
     func testRecentStatusMatchesRecentAndStalePrompts() throws {
         let now = Date(timeIntervalSinceReferenceDate: 500_000)
         let recentPromptID = try repository.createPrompt(

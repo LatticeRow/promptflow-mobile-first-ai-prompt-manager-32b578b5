@@ -82,6 +82,23 @@ final class PromptRepository {
         }
     }
 
+    func seedPromptForTesting(id: UUID, title: String, body: String) {
+        _ = try? performWrite { context in
+            let request = PromptRecord.fetchRequest()
+            request.fetchLimit = 1
+            request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+            let prompt = try context.fetch(request).first ?? PromptRecord(context: context)
+            prompt.id = id
+            prompt.title = title
+            prompt.body = body
+            prompt.sourceType = "text"
+            prompt.captureMethod = "ui_test"
+            prompt.updatedAt = .now
+            return ()
+        }
+    }
+
     @discardableResult
     func savePrompt(
         text: String?,
@@ -277,6 +294,45 @@ final class PromptRepository {
         request.fetchLimit = limit
 
         return (try? container.viewContext.fetch(request)) ?? []
+    }
+
+    func widgetSourcePrompts(limit: Int) -> [PromptRecord] {
+        guard limit > 0 else {
+            return []
+        }
+
+        var selectedPrompts: [PromptRecord] = []
+        var seenPromptIDs = Set<UUID>()
+
+        func appendUnique(_ prompts: [PromptRecord]) {
+            for prompt in prompts {
+                let promptID = prompt.idValue
+                guard seenPromptIDs.insert(promptID).inserted else {
+                    continue
+                }
+
+                selectedPrompts.append(prompt)
+                if selectedPrompts.count == limit {
+                    return
+                }
+            }
+        }
+
+        var pinnedFilter = PromptFilter()
+        pinnedFilter.limit = limit
+        pinnedFilter.pinnedOnly = true
+        pinnedFilter.sortOrder = .updatedAtDescending
+        appendUnique(prompts(matching: pinnedFilter))
+
+        if selectedPrompts.count < limit {
+            appendUnique(recentlyCopiedPrompts(limit: limit))
+        }
+
+        if selectedPrompts.count < limit {
+            appendUnique(latestPrompts(limit: limit))
+        }
+
+        return Array(selectedPrompts.prefix(limit))
     }
 
     func copyMetadata(for id: UUID, in context: NSManagedObjectContext? = nil) -> PromptCopyMetadata? {

@@ -12,7 +12,7 @@ struct SettingsView: View {
             }
 
             Section("Share") {
-                Label("Share text or links into Prompt Atelier.", systemImage: "square.and.arrow.up.fill")
+                Label("Share text or links to save them here.", systemImage: "square.and.arrow.up.fill")
                     .foregroundStyle(.white.opacity(0.88))
             }
         }

@@ -1,5 +1,6 @@
 import CoreData
 import SwiftUI
+import WidgetKit
 
 struct PromptDetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -33,6 +34,7 @@ struct PromptDetailView: View {
                         HStack(spacing: 12) {
                             Button {
                                 appContainer.repository.togglePinned(id: prompt.idValue)
+                                WidgetCenter.shared.reloadAllTimelines()
                                 reloadPrompt()
                             } label: {
                                 Label(prompt.isPinned ? "Pinned" : "Pin", systemImage: prompt.isPinned ? "pin.fill" : "pin")
@@ -107,7 +109,7 @@ struct PromptDetailView: View {
     private func metadataCard(for prompt: PromptRecord) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Prompt info")
+                Text("Details")
                     .font(.headline)
 
                 Spacer()
@@ -169,6 +171,7 @@ struct PromptDetailView: View {
             try appContainer.repository.recategorizePrompt(id: promptID, toolTag: toolTag, taskTag: taskTag)
             try appContainer.repository.assignPrompt(id: promptID, toFolderID: folderID)
             try appContainer.repository.setTags(forPromptID: promptID, tagIDs: customTagIDs)
+            WidgetCenter.shared.reloadAllTimelines()
             reloadPrompt()
         } catch {
             AppLogger.persistence.error("Unable to save prompt details: \(error.localizedDescription)")

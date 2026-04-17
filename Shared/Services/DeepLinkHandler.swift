@@ -6,6 +6,10 @@ enum DeepLinkHandler {
             return nil
         }
 
+        if url.host == "library" {
+            return .library
+        }
+
         let components = url.pathComponents.filter { $0 != "/" }
         guard url.host == "prompt", components.count == 1, let id = UUID(uuidString: components[0]) else {
             return nil

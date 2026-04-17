@@ -16,7 +16,7 @@ struct PromptWidgetProvider: TimelineProvider {
     func placeholder(in context: Context) -> PromptWidgetEntry {
         PromptWidgetEntry(
             date: .now,
-            prompts: [PromptWidgetItem(id: UUID(), title: "Recent prompts", preview: "Your last copy shows up here.", badge: "Recent")]
+            prompts: [PromptWidgetItem(id: UUID(), title: "Pinned and recent", preview: "Keep your best prompts one tap away.", badge: "Pinned")]
         )
     }
 
@@ -31,21 +31,19 @@ struct PromptWidgetProvider: TimelineProvider {
 
     private func makeEntry() -> PromptWidgetEntry {
         let repository = PromptRepository(container: PersistenceController.sharedWidget.container)
-        let recentCopies = repository.recentlyCopiedPrompts(limit: 3)
-        let sourcePrompts = recentCopies.isEmpty ? repository.latestPrompts(limit: 3) : recentCopies
-        let prompts = sourcePrompts.map {
+        let prompts = repository.widgetSourcePrompts(limit: 3).map {
             PromptWidgetItem(
                 id: $0.idValue,
                 title: $0.displayTitle,
                 preview: $0.previewBody,
-                badge: $0.folder?.displayName ?? $0.suggestedTaskTag
+                badge: $0.folder?.displayName ?? ($0.isPinned ? "Pinned" : $0.suggestedTaskTag)
             )
         }
 
         if prompts.isEmpty {
             return PromptWidgetEntry(
                 date: .now,
-                prompts: [PromptWidgetItem(id: UUID(), title: "Share to save", preview: "Recent prompts appear here.", badge: nil)]
+                prompts: []
             )
         }
 

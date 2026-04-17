@@ -1,4 +1,5 @@
 import Foundation
+import WidgetKit
 
 struct ShareSaveService {
     @discardableResult
@@ -21,6 +22,7 @@ struct ShareSaveService {
         }
 
         AppGroupPaths.recordSharedCapture()
+        WidgetCenter.shared.reloadAllTimelines()
         return true
     }
 
